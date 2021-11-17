@@ -45,6 +45,30 @@ Các thành viên đã hoàn thành 3 biểu đồ cho các usecase được gia
 
 ## Revisions
 
+# LAB 02 - Software Interface Design
+
+## Tasks
+Hoàn thành thiết kế giao diện người dùng cho các usecase, cụ thể:
+<ol>
+	<li>View station information.</li>
+    <li>View bike information.</li>
+    <li>Rent bike.</li>
+    <li>Return bike.</li>
+</ol>
+Hoàn thành sơ đồ chuyển màn hình
+Hoàn thành thiết kế giao diện hệ thống
+
+## Contributions
+Các thành viên đã hoàn thành giao diện người dùng theo sự phân công, cụ thể:
+<ol>
+    <li>Bui Tien Dat: usecase View station information.</li>
+    <li>Eang Sokunthea: usecase View bike information.</li>
+    <li>Le Phuong Nam: usecase Rent bike.</li>
+    <li>Le Minh Nghia: usecase Return bike.</li>
+</ol>
+Hoàn thành sơ đồ chuyển màn hình: Bui Tien Dat
+Hoàn thành thiết kế giao diện hệ thống: Le Phuong Nam
+
 
 
 
