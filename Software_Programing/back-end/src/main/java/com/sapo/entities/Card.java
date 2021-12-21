@@ -1,6 +1,8 @@
 package com.sapo.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -11,6 +13,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Table(name = "cards")
+@NoArgsConstructor
 public class Card extends BaseEntity{
     @Column(name = "card_code", length = 50)
     private String cardCode;
@@ -26,4 +29,12 @@ public class Card extends BaseEntity{
 
     @Column(name = "status")
     private int status;
+
+    public Card(String cardCode, String owner, int cvvCode, String dateExpired) {
+        super();
+        this.cardCode = cardCode;
+        this.owner = owner;
+        this.cvvCode = String.valueOf(cvvCode);
+
+    }
 }

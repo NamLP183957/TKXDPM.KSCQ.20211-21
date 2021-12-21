@@ -23,7 +23,7 @@ public class JPAConfig {
         dataSourceConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSourceConfig.setJdbcUrl("jdbc:mysql://localhost:3306/ecobike?useUnicode=yes&characterEncoding=UTF-8");
         dataSourceConfig.setUsername("root");
-        dataSourceConfig.setPassword("root");
+        dataSourceConfig.setPassword("");
         return new HikariDataSource(dataSourceConfig);
     }
 
