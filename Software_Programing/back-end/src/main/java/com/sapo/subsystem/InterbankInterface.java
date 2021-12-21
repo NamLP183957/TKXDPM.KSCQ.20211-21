@@ -1,6 +1,7 @@
 package com.sapo.subsystem;
 
 
+import com.sapo.dto.PaymentTransaction.PaymentTransactionDTO;
 import com.sapo.entities.Card;
 import com.sapo.entities.PaymentTransaction;
 import com.sapo.exception.PaymentException;
@@ -19,11 +20,11 @@ public interface InterbankInterface {
      * @param card      - thẻ của người dùng để thực hiện giao dịch
      * @param amount    - tổng tiền phải trả
      * @param contents  - nội dung giao dịch
-     * @return (@link PaymentTransaction) - nếu giao dịch thành cồng
+     * @return (@link PaymentTransactionDTO) - nếu giao dịch thành cồng
      * @throws PaymentException         - nếu mã trả về là error code
      * @throws UnrecognizedException    - nếu mã lỗi trả về không xác định hoắc có lỗi hệ thống.
      */
-    public abstract PaymentTransaction pay(Card card, int amount, String contents)
+    public abstract PaymentTransactionDTO pay(Card card, int amount, String contents)
             throws PaymentException, UnrecognizedException;
 
     /**
@@ -35,6 +36,6 @@ public interface InterbankInterface {
      * @throws PaymentException         - nếu mã trả về là error code
      * @throws UnrecognizedException    - nếu mã lỗi trả về không xác định hoắc có lỗi hệ thống.
      */
-    public abstract  PaymentTransaction refund(Card card, int amount, String contents)
+    public abstract  PaymentTransactionDTO refund(Card card, int amount, String contents)
         throws PaymentException, UnrecognizedException;
 }

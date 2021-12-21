@@ -35,6 +35,6 @@ public class Card extends BaseEntity{
         this.cardCode = cardCode;
         this.owner = owner;
         this.cvvCode = String.valueOf(cvvCode);
-
+        this.dateExpired = Long.parseLong(dateExpired);
     }
 }

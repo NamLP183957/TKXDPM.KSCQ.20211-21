@@ -11,7 +11,7 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
         Map<String, Object> transaction = new MyMap();
-        transaction.put("command", "abc");
+        transaction.put("command", "pay");
         transaction.put("cardCode", "kscq1_group21_2021");
         transaction.put("owner", "Group 21");
         transaction.put("cvvCode", "899");
