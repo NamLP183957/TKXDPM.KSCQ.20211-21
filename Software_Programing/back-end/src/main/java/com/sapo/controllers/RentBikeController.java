@@ -127,4 +127,25 @@ public class RentBikeController {
         }
         return true;
     }
+
+    /**
+     * Kiểm tra xem mã bảo mật có hợp lệ hay không
+     * @param bikeCode   - Mã bảo mật cần kiểm tra
+     * @return  true nếu mã bảo mật là một chuỗi gồm 3 chữ số, ngược lại là false.
+     */
+    private boolean validateBikeCode(String bikeCode) {
+        // checks if the String is null
+        if (bikeCode == null){
+            return false;
+        }
+        int len = bikeCode.length();
+          for (int i = 0; i < len; i++) {
+            // checks whether the character is neither a letter nor a digit
+            // if it is neither a letter nor a digit then it will return false
+            if ((Character.isLetterOrDigit(bikeCode.charAt(i)) == false)) {
+                return false;
+            }
+        }
+          return true;
+    }
 }
