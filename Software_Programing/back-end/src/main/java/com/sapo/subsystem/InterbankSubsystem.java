@@ -5,10 +5,12 @@ import com.sapo.entities.Card;
 import com.sapo.exception.PaymentException;
 import com.sapo.exception.UnrecognizedException;
 import com.sapo.subsystem.interbank.InterbankSubsystemController;
+import org.springframework.stereotype.Component;
 
 /**
  * Class này dùng để liên kết với Interbank để tạo giao dịch
  */
+@Component
 public class InterbankSubsystem implements InterbankInterface{
     /**
      * Controller của subsystem.
