@@ -29,15 +29,6 @@ import com.sapo.exception.UnrecognizedException;
 @RestController
 public class ReturnBikeController {
     private static final int RENT_FEE_A_PART_DAY = 200000;
-//    private ParkingSlotService parkingSlotService;
-//    @PostMapping("/process-bike-code")
-//    public ResponseEntity<Object> processBikeCode(@RequestBody String bikeCode) {
-//        if (parkingSlotService.processBikeCode(bikeCode)) {
-//            return ResponseEntity.ok().build();
-//        } else {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
     /**
      * Represent the Interbank subsystem
      */
@@ -55,8 +46,7 @@ public class ReturnBikeController {
           Map<String, Object> result = new MyMap();
           result.put("RESULT", "PAYMENT FAILED!");
           try{
-              this.interbank = new InterbankSubsystem();
-              PaymentTransactionDTO transaction = interbank.refund(card, amount, contents);
+              PaymentTransactionDTO transaction = this.interbank.refund(card, amount, contents);
               result.put("RESULT", "PAYMENT SUCCESSFUL!");
               result.put("MESSAGE", "You have successfully paid!");
           }catch (PaymentException | UnrecognizedException ex){
@@ -91,6 +81,5 @@ public class ReturnBikeController {
           rentFee = Math.round((double) timeRentHours / 12)*RENT_FEE_A_PART_DAY + Math.round(timeOver / 15)*2000;
           return rentFee;
       }
-
 
 }
