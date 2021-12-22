@@ -8,10 +8,7 @@ import com.sapo.exception.PaymentException;
 import com.sapo.exception.UnrecognizedException;
 
 /**
- * The {@code InterbankInterface} class is used to communicate with the
- * {@link subsystem.InterbankSubsystem InterbankSubsystem} to make transaction
- *
- * @author
+ * Class này dùng để liên kết với InterbankSubsystem để tạo giao dịch
  *
  */
 public interface InterbankInterface {

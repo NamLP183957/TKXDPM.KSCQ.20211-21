@@ -1,5 +1,9 @@
 package com.sapo.utils;
 
+import com.sapo.services.impl.ParkingSlotServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.logging.Logger;
+
 /**
  * Class cung cap cac phuong thuc giup gui request len server và nhan du lieu tra ve
  */
@@ -30,7 +34,7 @@ public class API {
     /**
      * Thuoc tinh giup log ra thong tin console
      */
-    //private static Logger LOGGER = Utils.getLogger(Utils.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(API.class.toString());
 
     /**
      * Thiet lep connection tu serverr
@@ -66,11 +70,10 @@ public class API {
         String inputLine;
         StringBuilder respone = new StringBuilder(); // ising StringBuilder for the sake of memory and performance
         while ((inputLine = in.readLine()) != null)
-            System.out.println(inputLine);
-        respone.append(inputLine + "\n");
+            respone.append(inputLine);
+        //respone.append(inputLine + "\n");
         in.close();
-        //LOGGER.info("Respone Info: " + respone.substring(0, respone.length() - 1).toString());
-        return respone.substring(0, respone.length() - 1).toString();
+        return respone.toString();
     }
 
     /**
@@ -85,7 +88,8 @@ public class API {
         HttpURLConnection conn = setupConnection(url, "GET", token);
 
         // Phan 2: Doc du lieu tra ve tu Server
-        return readResponse(conn);
+        String reponse = readResponse(conn);
+        return reponse;
     }
 
     /**

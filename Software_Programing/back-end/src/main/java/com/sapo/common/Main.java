@@ -42,5 +42,8 @@ public class Main {
             ex.printStackTrace();
         }
         System.out.println("Reponse: " + response);
+//        String response = "{\"vehicleCode\":\"c20ad4d76fe97759aa27a0c99bff6710\"}";
+//        String newResponse = response.append(inputLine + "\n");
+//        response.substring(0, response.length() - 1).toString();
     }
 }

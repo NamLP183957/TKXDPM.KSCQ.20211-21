@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ParkingSlotRepository extends JpaRepository<ParkingSlot, Integer>, JpaSpecificationExecutor<ParkingSlot> {
-    public boolean existsByCode(String code);
+    public ParkingSlot findByCode(String code);
 }

@@ -1,8 +1,9 @@
 package com.sapo.services;
 
+import com.sapo.dto.parkingSlot.ParkingSlotDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface ParkingSlotService {
-    public boolean processBikeCode(String bikeCode);
+    public ParkingSlotDTO processBikeCode(String bikeCode);
 }
