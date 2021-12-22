@@ -25,6 +25,9 @@ public class RentBikeController {
     private ParkingSlotService parkingSlotService;
     private VehicleService vehicleService;
 
+    public RentBikeController(){
+
+    }
     /**
      * Phương thức này dùng để xử lý mã bike code mỗi khi người dùng gửi code lên hệ thống
      * @param bikeCode  - mã code do người dùng nhập lên
@@ -48,7 +51,7 @@ public class RentBikeController {
      * @return
      */
     @PostMapping("/deposit")
-    public ResponseEntity<Object> deposit(@RequestBody PaymentForm paymentForm) {
+    private ResponseEntity<Object> deposit(@RequestBody PaymentForm paymentForm) {
         try {
             if (!validateDateString(paymentForm.getCvvCode())) {
                 return ResponseEntity.badRequest().body("Invalid cvv code");
@@ -75,7 +78,7 @@ public class RentBikeController {
      * @param cvvCode   - Mã bảo mật cần kiểm tra
      * @return  true nếu mã bảo mật là một chuỗi gồm 3 chữ số, ngược lại là false.
      */
-    private boolean validateSecurityCode(String cvvCode) {
+    public boolean validateSecurityCode(String cvvCode) {
         if (cvvCode.length() != 3) return false;
         try {
             Integer.parseInt(cvvCode);
@@ -90,7 +93,7 @@ public class RentBikeController {
      * @param dateStr   - Chuỗi nhập vào
      * @return     true nếu chuỗi nhập vào gồm 4 chữ số, 2 chữ só đầu biểu diễn cho tháng, 2 chữ số sau biểu diễn cho ngày.
      */
-    private boolean validateDateString(String dateStr) {
+    public boolean validateDateString(String dateStr) {
         if (dateStr.length() != 4) return false;
         try {
             Long.parseLong(dateStr);
@@ -124,6 +127,27 @@ public class RentBikeController {
             }
         } catch (NumberFormatException e) {
             return false;
+        }
+        return true;
+    }
+
+    /**
+     * Kiểm tra xem mã bảo mật có hợp lệ hay không
+     * @param bikeCode   - Mã bảo mật cần kiểm tra
+     * @return  true nếu mã bảo mật là một chuỗi gồm 3 chữ số, ngược lại là false.
+     */
+    public boolean validateBikeCode(String bikeCode) {
+        // checks if the String is null
+        if (bikeCode == null){
+            return false;
+        }
+        int len = bikeCode.length();
+        for (int i = 0; i < len; i++) {
+            // checks whether the character is neither a letter nor a digit
+            // if it is neither a letter nor a digit then it will return false
+            if ((Character.isLetterOrDigit(bikeCode.charAt(i)) == false)) {
+                return false;
+            }
         }
         return true;
     }
