@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public interface VehicleService {
-
+  // Lấy ra danh sách vehicle
   List<VehicleDTOResponse> getListVehicle(String keyword);
   
   //Hàm tìm Vehicle bằng id
