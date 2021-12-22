@@ -20,4 +20,7 @@ public interface VehicleService {
   
   //Hàm search Vehicle
   VehiclePaginationDTO searchVehicle(int page, int limit, String keyword);
+
+  // Tìm xe đang đỗ ở trong parking slot
+  VehicleDTOResponse findNotRentVehicleByParkingSlot(int parkingSlotId);
 }

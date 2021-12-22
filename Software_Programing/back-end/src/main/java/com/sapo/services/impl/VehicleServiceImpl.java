@@ -1,5 +1,6 @@
 package com.sapo.services.impl;
 
+import com.sapo.common.ConstantVariableCommon;
 import com.sapo.dao.jpa.VehicleDAO;
 import com.sapo.dto.common.Pagination;
 import com.sapo.dto.vehicle.VehicleDTOResponse;
@@ -37,7 +38,7 @@ public class VehicleServiceImpl implements VehicleService {
     private List<VehicleDTOResponse> transferVehicleToVehicleDTOInvoice(List<Vehicle> vehicles) {
         List<VehicleDTOResponse> vehicleDTOS = new ArrayList<>();
         for (Vehicle vehicle : vehicles) {
-            VehicleDTOResponse vehicleDTO = new VehicleDTOResponse(vehicle.getId(), vehicle.getParkingSlotId(), "chuyển type int sang string", vehicle.getLicensePlate(), "battery", "maxtime", "status");
+            VehicleDTOResponse vehicleDTO = new VehicleDTOResponse(vehicle);
             vehicleDTOS.add(vehicleDTO);
         }
         return vehicleDTOS;
@@ -59,6 +60,12 @@ public class VehicleServiceImpl implements VehicleService {
         return vehiclePaginationDTO;
     }
 
+    @Override
+    public VehicleDTOResponse findNotRentVehicleByParkingSlot(int parkingSlotId) {
+        Vehicle vehicle = vehicleRepository.findVehicleByParkingSlotIdAndStatus(parkingSlotId, ConstantVariableCommon.STATUS_VEHICLE_2);
+        return new VehicleDTOResponse(vehicle);
+    }
+
 
     // Chuyển Vehicle sang VehicleDTO
     private List<VehicleDTOResponse> transferVehicleToVehicleDTO(List<Vehicle> vehicles) {
@@ -68,7 +75,7 @@ public class VehicleServiceImpl implements VehicleService {
             if (vehicle.getLicensePlate() == null) {
                 vehicle.setLicensePlate(" ");
             }
-            VehicleDTOResponse vehicleDTOResponse = new VehicleDTOResponse(vehicle.getId(), vehicle.getParkingSlotId(), "chuyển type int sang string", vehicle.getLicensePlate(), "battery", "maxtime", "status");
+            VehicleDTOResponse vehicleDTOResponse = new VehicleDTOResponse(vehicle);
             vehicleDTOResponses.add(vehicleDTOResponse);
         });
         return vehicleDTOResponses;
