@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("api/rentbike")
+@RequestMapping("api/rent-bike")
 @CrossOrigin("http://localhost:3000")
 @AllArgsConstructor
 @RestController

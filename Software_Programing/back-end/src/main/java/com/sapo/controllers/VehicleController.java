@@ -1,8 +1,6 @@
 package com.sapo.controllers;
 
-
 import com.sapo.dto.vehicle.VehicleDTOResponse;
-import com.sapo.dto.vehicle.VehiclePaginationDTO;
 import com.sapo.entities.Vehicle;
 import com.sapo.services.VehicleService;
 import org.springframework.http.ResponseEntity;
@@ -21,31 +19,28 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
-  @GetMapping()
-  public ResponseEntity<List<VehicleDTOResponse>> getListVehicle(@RequestParam String keyword){
-      List<VehicleDTOResponse> vehicleDTOS = vehicleService.getListVehicle(keyword);
-      return ResponseEntity.ok(vehicleDTOS);
+  @GetMapping("/list/{stationId}")
+  public ResponseEntity<List<Vehicle>> getListVehicleInStation(@PathVariable("stationId") int stationId){
+      List<Vehicle> vehicles = vehicleService.getListVehicleInStation(stationId);
+      return ResponseEntity.ok(vehicles);
   }
 
-  // API Tìm tất cả Vehicle và phân trang
-  @GetMapping("/list")
-  public ResponseEntity<VehiclePaginationDTO> listVehiclePagination(@RequestParam int page, @RequestParam int limit, @RequestParam String keyword){
-    VehiclePaginationDTO vehiclePaginationDTO = vehicleService.searchVehicle(page, limit, keyword);
-    return ResponseEntity.ok(vehiclePaginationDTO);
-  }
+    //API tìm thông tin Vehicle bằng id
+    @GetMapping("/{id}")
+    public ResponseEntity<Vehicle> findVehicleById(@PathVariable("id") int id){
+        Vehicle vehicle = vehicleService.findVehicleById(id);
+        return ResponseEntity.ok(vehicle);
+    }
 
-//    //API lấy list Vehicle
-//    @GetMapping
-//    public ResponseEntity<List<Vehicle>> listVehicle(@RequestParam String keyword){
-//        List<Vehicle> vehicles = vehicleService.findAllListVehicle(keyword);
-//        return ResponseEntity.ok(vehicles);
-//    }
-  
-  //API tìm thông tin Vehicle bằng id
-  @GetMapping("/{id}")
-  public ResponseEntity<Vehicle> findVehicleById(@PathVariable("id") int id){
-    Vehicle vehicle = vehicleService.findVehicleById(id);
-    return ResponseEntity.ok(vehicle);
-  }
-  
+    @GetMapping("/list-in-rent-time")
+    public ResponseEntity<List<Vehicle>> getListVehicleInRentTime(){
+        List<Vehicle> vehicles = vehicleService.getListVehicleInRentTime();
+        return ResponseEntity.ok(vehicles);
+    }
+
+    @GetMapping("/list-in-rent-time/{id}")
+    public ResponseEntity<VehicleDTOResponse> findVehicleInRentTimeById(@PathVariable("id") int id){
+        VehicleDTOResponse vehicleDTOResponses = vehicleService.findVehicleInRentTimeById(id);
+        return ResponseEntity.ok(vehicleDTOResponses);
+    }
 }

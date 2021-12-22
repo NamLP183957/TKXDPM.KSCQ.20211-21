@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 import com.sapo.exception.PaymentException;
 import com.sapo.exception.UnrecognizedException;
 
-@RequestMapping("api/returnbike")
+@RequestMapping("api/return-bike")
 @CrossOrigin("http://localhost:3000")
 @AllArgsConstructor
 @RestController
