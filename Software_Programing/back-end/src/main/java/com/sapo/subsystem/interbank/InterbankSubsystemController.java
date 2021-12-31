@@ -61,25 +61,8 @@ public class InterbankSubsystemController {
     private PaymentTransactionDTO makePaymentTransaction(MyMap response) {
         if (response == null)
             return null;
-        LOGGER.info("errorCode: " + response.get("errorCode"));
-        MyMap transcation = (MyMap) response.get("transaction");
-        Card card = new Card(
-                (String) transcation.get("cardCode"),
-                (String) transcation.get("owner"),
-                Integer.parseInt((String) transcation.get("cvvCode")),
-                (String) transcation.get("dateExpired"));
 
-        PaymentTransactionDTO transDTO = new PaymentTransactionDTO(
-                (String) response.get("errorCode"),
-                card,
-                (String) transcation.get("transactionId"),
-                (String) transcation.get("transactionContent"),
-                Integer.parseInt((String) transcation.get("amount")),
-                (String) transcation.get("createdAt")
-        );
-
-
-        switch (transDTO.getErrorCode()) {
+        switch (String.valueOf(response.get("errorCode"))) {
             case "00":
                 break;
             case "01":
@@ -99,6 +82,23 @@ public class InterbankSubsystemController {
             default:
                 throw new UnrecognizedException();
         }
+
+        LOGGER.info("errorCode: " + response.get("errorCode"));
+        MyMap transcation = (MyMap) response.get("transaction");
+        Card card = new Card(
+                (String) transcation.get("cardCode"),
+                (String) transcation.get("owner"),
+                Integer.parseInt((String) transcation.get("cvvCode")),
+                (String) transcation.get("dateExpired"));
+
+        PaymentTransactionDTO transDTO = new PaymentTransactionDTO(
+                (String) response.get("errorCode"),
+                card,
+                (String) transcation.get("transactionId"),
+                (String) transcation.get("transactionContent"),
+                Integer.parseInt((String) transcation.get("amount")),
+                (String) transcation.get("createdAt")
+        );
 
         return transDTO;
     }

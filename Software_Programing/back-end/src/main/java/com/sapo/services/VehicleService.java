@@ -1,9 +1,6 @@
 package com.sapo.services;
 
-
-
 import com.sapo.dto.vehicle.VehicleDTOResponse;
-import com.sapo.dto.vehicle.VehiclePaginationDTO;
 import com.sapo.entities.Vehicle;
 
 import org.springframework.stereotype.Service;
@@ -12,15 +9,18 @@ import java.util.List;
 
 @Service
 public interface VehicleService {
-
-  List<VehicleDTOResponse> getListVehicle(String keyword);
+  // Lấy ra danh sách vehicle
+  List<Vehicle> getListVehicleInStation(int stationId);
   
   //Hàm tìm Vehicle bằng id
   Vehicle findVehicleById(int id);
-  
-  //Hàm search Vehicle
-  VehiclePaginationDTO searchVehicle(int page, int limit, String keyword);
+
+  List<Vehicle> getListVehicleInRentTime();
+
+  VehicleDTOResponse findVehicleInRentTimeById(int id);
 
   // Tìm xe đang đỗ ở trong parking slot
   VehicleDTOResponse findNotRentVehicleByParkingSlot(int parkingSlotId);
+
+  boolean updateVehicleStatus(Integer vehicleId, Integer status);
 }

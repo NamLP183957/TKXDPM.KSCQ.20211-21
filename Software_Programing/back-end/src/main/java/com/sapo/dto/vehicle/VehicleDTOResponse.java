@@ -12,12 +12,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleDTOResponse {
   private int id;
-  private int parkingSlotId;
   private int type;
   private String licensePlate;
   private int battery;
   private int maxTime;
+  private long timeRented;
+  private double fee;
   private int status;
+  private int parkingSlotId;
 
   public VehicleDTOResponse(Vehicle vehicle) {
     this.id = vehicle.getId();
