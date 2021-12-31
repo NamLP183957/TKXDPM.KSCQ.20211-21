@@ -1,9 +1,13 @@
 package com.sapo.dto.PaymentTransaction;
 
 import com.sapo.entities.Card;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 
+@Getter
+@Setter
 public class PaymentTransactionDTO {
     private String errorCode;
     private Card card;

@@ -11,4 +11,8 @@ public class ConstantVariableCommon {
         if (status == STATUS_VEHICLE_2) return "chưa có ";
         return "cccccc";
     }
+
+    public static final int NOT_DONE_INVOICE = 1;
+    public static final int DONE_INVOICE = 2;
+
 }

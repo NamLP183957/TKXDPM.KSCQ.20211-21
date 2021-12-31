@@ -5,6 +5,8 @@ import com.sapo.entities.Card;
 import com.sapo.entities.PaymentTransaction;
 import com.sapo.exception.*;
 import com.sapo.repositories.CardRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.sapo.utils.Configs;
 import com.sapo.utils.MyMap;
 import com.sapo.utils.Utils;
@@ -19,11 +21,13 @@ public class InterbankSubsystemController {
     private static final String SECRET_KEY = "BjVrvzaFJ9w=";
     private static InterbankBoundary interbankBoundary = new InterbankBoundary();
     private static String token = "";
-
+    private static Logger LOGGER = LoggerFactory.getLogger(InterbankSubsystemController.class.getName());
     public PaymentTransactionDTO pay(Card card, int amount, String contents) {
 
         Map<String, Object> requestMap = generateRequestMap(card, amount, contents, PAY_COMMAND);
-        String responseText = interbankBoundary.query(Configs.PROCESS_TRANSACTION_URL, generateData(requestMap), token);
+
+        String responseText = interbankBoundary.query(Configs.PROCESS_TRANSACTION_URL, token, generateData(requestMap));
+
         MyMap response = null;
         try {
             response = MyMap.toMyMap(responseText, 0);
@@ -37,7 +41,7 @@ public class InterbankSubsystemController {
 
     public PaymentTransactionDTO refund(Card card, int amount, String contents) {
         Map<String, Object> requestMap = generateRequestMap(card, amount, contents, REFUND_COMMAND);
-        String responseText = interbankBoundary.query(Configs.PROCESS_TRANSACTION_URL, generateData(requestMap), token);
+        String responseText = interbankBoundary.query(Configs.PROCESS_TRANSACTION_URL, token, generateData(requestMap));
         MyMap response = null;
         try {
             response = MyMap.toMyMap(responseText, 0);
@@ -57,6 +61,7 @@ public class InterbankSubsystemController {
     private PaymentTransactionDTO makePaymentTransaction(MyMap response) {
         if (response == null)
             return null;
+        LOGGER.info("errorCode: " + response.get("errorCode"));
         MyMap transcation = (MyMap) response.get("transaction");
         Card card = new Card(
                 (String) transcation.get("cardCode"),

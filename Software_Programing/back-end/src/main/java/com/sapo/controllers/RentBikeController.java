@@ -1,21 +1,26 @@
 package com.sapo.controllers;
 
+import com.sapo.common.ConstantVariableCommon;
 import com.sapo.dto.PaymentTransaction.PaymentTransactionDTO;
 import com.sapo.dto.form.PaymentForm;
 import com.sapo.dto.parkingSlot.ParkingSlotDTO;
 import com.sapo.dto.vehicle.VehicleDTOResponse;
 import com.sapo.entities.Card;
+import com.sapo.entities.Invoice;
+import com.sapo.entities.PaymentTransaction;
 import com.sapo.entities.Vehicle;
 import com.sapo.exception.PaymentException;
 import com.sapo.exception.UnrecognizedException;
-import com.sapo.services.ParkingSlotService;
-import com.sapo.services.VehicleService;
+import com.sapo.services.*;
 import com.sapo.subsystem.InterbankInterface;
 import com.sapo.subsystem.InterbankSubsystem;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.lang.invoke.ConstantCallSite;
+import java.util.Date;
 
 @RequestMapping("api/rentbike")
 @CrossOrigin("http://localhost:3000")
@@ -24,6 +29,9 @@ import org.springframework.web.bind.annotation.*;
 public class RentBikeController {
     private ParkingSlotService parkingSlotService;
     private VehicleService vehicleService;
+    private PaymentTransactionService transactionService;
+    private CardService cardService;
+    private InvoiceService invoiceService;
 
     /**
      * Phương thức này dùng để xử lý mã bike code mỗi khi người dùng gửi code lên hệ thống
@@ -33,8 +41,9 @@ public class RentBikeController {
     @PostMapping("/process-bike-code")
     public ResponseEntity<Object> processBikeCode(@RequestBody String bikeCode) {
         ParkingSlotDTO parkingSlotDTO = parkingSlotService.processBikeCode(bikeCode);
-
+        System.out.println("bikeCode is " + bikeCode);
         if (parkingSlotDTO.getId() == 0) {
+            System.out.println("Error code");
             return ResponseEntity.badRequest().body("Invalid bike code!");
         } else {
             VehicleDTOResponse vehicleDTO = vehicleService.findNotRentVehicleByParkingSlot(parkingSlotDTO.getId());
@@ -47,23 +56,24 @@ public class RentBikeController {
      * @param paymentForm   -chứa các thông tin về thể thanh toán và số tiền cần thanh toán
      * @return
      */
-    @PostMapping("/deposit")
-    public ResponseEntity<Object> deposit(@RequestBody PaymentForm paymentForm) {
+    @PostMapping("/deposit/{vehicleId}")
+    public ResponseEntity<Object> deposit(@RequestBody PaymentForm paymentForm, @PathVariable("vehicleId")Integer vehicleId) {
         try {
-            if (!validateDateString(paymentForm.getCvvCode())) {
+            /*if (!validateDateString(paymentForm.getCvvCode())) {
                 return ResponseEntity.badRequest().body("Invalid cvv code");
             }
             if (!validateDateString(paymentForm.getDateExpired())) {
                 return ResponseEntity.badRequest().body("Invalid date expired");
-            }
+            }*/
             InterbankInterface interbank = new InterbankSubsystem();
             Card card = new Card();
             card.setCardCode(paymentForm.getCardCode());
             card.setCvvCode(paymentForm.getCvvCode());
             card.setOwner(paymentForm.getOwner());
             card.setDateExpired(Long.parseLong(paymentForm.getDateExpired()));
-
+            System.out.println("dateExpired: " + card.getDateExpired());
             PaymentTransactionDTO paymentTransaction = interbank.pay(card, paymentForm.getAmount(), "Deposit");
+            
             return ResponseEntity.ok(paymentTransaction);
         } catch (PaymentException | UnrecognizedException ex) {
             return ResponseEntity.badRequest().body("Cann't payment");
@@ -126,5 +136,33 @@ public class RentBikeController {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Phương thức này dùng để lưu thông tin giao dịch và bắt đầu tạo giao dịch và tạo hóa đơn
+     * @param paymentTransaction
+     */
+    private void saveTransaction(PaymentTransactionDTO paymentTransaction, Integer vehicleId) {
+        Card card = paymentTransaction.getCard();
+        Card c = cardService.saveCard(card);
+
+        PaymentTransaction transaction = new PaymentTransaction();
+        transaction.setCardId(c.getId());
+        transaction.setContent(paymentTransaction.getTransactionContent());
+        transaction.setAmount(paymentTransaction.getAmount());
+        transaction.setCreatedAt(Long.parseLong(paymentTransaction.getCreatedAt()));
+        transaction.setMethod("pay");
+        transaction.setErrorCode(paymentTransaction.getErrorCode());
+        PaymentTransaction trans = transactionService.saveTransaction(transaction);
+
+
+        Invoice invoice = new Invoice();
+        invoice.setVehicleId(vehicleId);
+        invoice.setTransactionId(trans.getId());
+        invoice.setStartTime(System.currentTimeMillis());
+        invoice.setStatus(ConstantVariableCommon.NOT_DONE_INVOICE);
+        invoice.setRestartTime(0);
+        invoice.setTotalRentTime(0);
+        invoiceService.createInvoice(invoice);
     }
 }
