@@ -35,7 +35,7 @@ public class Invoice extends BaseEntity{
     @Column(name = "vehicle_type")
     private int vehicleType;
 
-    private long caculateManualRentFee() {
+    public long caculateManualRentFee() {
         long currTime = System.currentTimeMillis();
         long totalRentTime = (currTime - restartTime) + this.totalRentTime;
         long totalRentTimeMinus = TimeUnit.MILLISECONDS.toMinutes(totalRentTime);
@@ -68,7 +68,7 @@ public class Invoice extends BaseEntity{
         return fee;
     }
 
-    private long caculateRentDayFee() {
+    public long caculateRentDayFee() {
         long currTime = System.currentTimeMillis();
         long totalRentTime = (currTime - restartTime) + this.totalRentTime;
         long totalRentTimeMinus = TimeUnit.MILLISECONDS.toMinutes(totalRentTime);

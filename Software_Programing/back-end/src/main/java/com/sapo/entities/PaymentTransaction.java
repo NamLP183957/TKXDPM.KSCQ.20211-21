@@ -26,10 +26,10 @@ public class PaymentTransaction extends BaseEntity{
     @Column(name = "created_at")
     private long createdAt;
 
-    @Column(name="error_code")
+    @Column(name = "error_code")
     private String errorCode;
 
-    @Column(name="amount")
+    @Column(name = "amount")
     private int amount;
 
     public PaymentTransaction(int cardId, String method, String content, long createdAt, String errorCode, int amount) {

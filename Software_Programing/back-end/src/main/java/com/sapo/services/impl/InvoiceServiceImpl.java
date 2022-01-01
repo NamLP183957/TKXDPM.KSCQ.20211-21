@@ -1,5 +1,6 @@
 package com.sapo.services.impl;
 
+import com.sapo.common.ConstantVariableCommon;
 import com.sapo.entities.Invoice;
 import com.sapo.repositories.InvoiceRepository;
 import com.sapo.services.InvoiceService;
@@ -17,4 +18,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void createInvoice(Invoice invoice) {
         invoiceRepository.save(invoice);
     }
+
+    @Override
+    public Invoice findById(int invoiceId) {
+        return invoiceRepository.findById(invoiceId);
+    }
+
+    @Override
+    public Invoice findNotDoneFollowVehicle(int vehicleId) {
+        return invoiceRepository.findInvoiceByVehicleIdAndStatus(vehicleId, ConstantVariableCommon.NOT_DONE_INVOICE);
+    }
+
+
 }

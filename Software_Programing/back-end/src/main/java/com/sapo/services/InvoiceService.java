@@ -6,4 +6,8 @@ import org.springframework.stereotype.Service;
 @Service
 public interface InvoiceService {
     public void createInvoice(Invoice invoice);
+
+    public Invoice findById(int invoiceId);
+
+    public Invoice findNotDoneFollowVehicle(int vehicleId);
 }

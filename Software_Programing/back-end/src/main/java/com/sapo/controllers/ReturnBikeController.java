@@ -1,7 +1,13 @@
 package com.sapo.controllers;
 
+import com.sapo.common.ConstantVariableCommon;
 import com.sapo.dto.PaymentTransaction.PaymentTransactionDTO;
+import com.sapo.dto.form.PaymentForm;
+import com.sapo.dto.form.PaymentFormReturnBike;
 import com.sapo.entities.Card;
+import com.sapo.entities.Invoice;
+import com.sapo.entities.Vehicle;
+import com.sapo.services.InvoiceService;
 import com.sapo.services.ParkingSlotService;
 import com.sapo.subsystem.InterbankSubsystem;
 import lombok.AllArgsConstructor;
@@ -31,32 +37,73 @@ import com.sapo.exception.UnrecognizedException;
 public class ReturnBikeController {
     private static final int RENT_FEE_A_PART_DAY = 200000;
     private ParkingSlotService parkingSlotService;
+    private InvoiceService invoiceService;
     /**
      * Represent the Interbank subsystem
      */
       private InterbankInterface interbank;
 
-    /**
-     * Thuc hien thanh toan tien thue xe cho khach hang
-     * @param card: the card nguoi thanh toan
-     * @param amount: so tien can thanh toan
-     * @param contents: noi dung giao dich
-     * @return result: phan hoi giao dich da thuc hien thanh cong hay chua
-     */
-      @PostMapping("/process-transaction")
-      public Map<String, Object> processTransactionReturnBike(@RequestBody Card card, @RequestBody int amount, @RequestBody String contents ){
-          Map<String, Object> result = new MyMap();
-          result.put("RESULT", "PAYMENT FAILED!");
-          try{
-              PaymentTransactionDTO transaction = this.interbank.refund(card, amount, contents);
-              result.put("RESULT", "PAYMENT SUCCESSFUL!");
-              result.put("MESSAGE", "You have successfully paid!");
-          }catch (PaymentException | UnrecognizedException ex){
-                result.put("MESSAGE", ex.getMessage());
-          }
+//    /**
+//     * Thuc hien thanh toan tien thue xe cho khach hang
+//     * @param card: the card nguoi thanh toan
+//     * @param amount: so tien can thanh toan
+//     * @param contents: noi dung giao dich
+//     * @return result: phan hoi giao dich da thuc hien thanh cong hay chua
+//     */
+//      @PostMapping("/process-transaction")
+//      public Map<String, Object> processTransactionReturnBike(@RequestBody Card card, @RequestBody int amount, @RequestBody String contents ){
+//          Map<String, Object> result = new MyMap();
+//          result.put("RESULT", "PAYMENT FAILED!");
+//          try{
+//              PaymentTransactionDTO transaction = this.interbank.refund(card, amount, contents);
+//              result.put("RESULT", "PAYMENT SUCCESSFUL!");
+//              result.put("MESSAGE", "You have successfully paid!");
+//          }catch (PaymentException | UnrecognizedException ex){
+//                result.put("MESSAGE", ex.getMessage());
+//          }
+//
+//          return result;
+//      }
 
-          return result;
-      }
+    @PostMapping("/process-transaction")
+    public ResponseEntity<Object> payment(@RequestBody PaymentFormReturnBike paymentFormReturnBike){
+        try{
+            Vehicle vehicle = paymentFormReturnBike.getVehicle();
+            long deposit = vehicle.caculateDeposit();
+
+            Invoice invoice = invoiceService.findNotDoneFollowVehicle(vehicle.getId());
+            long feeRent = 0;
+            if(vehicle.getStatus() == ConstantVariableCommon.RENTED_VEHICLE_STATUS){
+                feeRent = invoice.caculateManualRentFee();
+            }else{
+                feeRent = invoice.caculateRentDayFee();
+            }
+
+            long amount = feeRent - deposit;
+
+            InterbankInterface interbank = new InterbankSubsystem();
+            Card card = new Card();
+            card.setCardCode(paymentFormReturnBike.getCardCode());
+            card.setCvvCode(paymentFormReturnBike.getCvvCode());
+            card.setOwner(paymentFormReturnBike.getOwner());
+            card.setDateExpired(Long.parseLong(paymentFormReturnBike.getDateExpired()));
+            PaymentTransactionDTO paymentTransaction;
+
+            if(amount > 0){
+                // neu tien thue lon hon tien coc thi goi api tra tien
+                paymentTransaction = interbank.pay(card, (int) amount , "Payment Return bike !");
+            }else{
+                // neu tien coc lon hon tien thue thi goi api hoan tien
+                paymentTransaction = interbank.refund(card, (int) -amount , "Payment Return bike !");
+            }
+            // update vehicle status
+            // update parking slot status
+            // update invoice status
+            return ResponseEntity.ok(paymentTransaction);
+        }catch (PaymentException | UnrecognizedException ex){
+            return ResponseEntity.badRequest().body("Cann't payment");
+        }
+    }
 
     /**
      * Tinh toan so tien thue xe

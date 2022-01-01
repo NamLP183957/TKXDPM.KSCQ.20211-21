@@ -1,5 +1,6 @@
 package com.sapo.entities;
 
+import com.sapo.common.ConstantVariableCommon;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,4 +28,20 @@ public class Vehicle extends BaseEntity {
 
   @Column(name = "status")
   private int status;
+
+  public long caculateDeposit(){
+    switch (type){
+      case ConstantVariableCommon.SINGLE_BIKE:
+        return 400000;
+      case ConstantVariableCommon.DOUBLE_BIKE:
+        return 550000;
+      case ConstantVariableCommon.DOUBLE_ELECTIC_BIKE:
+        return 800000;
+      case ConstantVariableCommon.SINGLE_ELECTRIC_BIKE:
+        return 700000;
+      default:
+        return 0;
+    }
+  }
+
 }

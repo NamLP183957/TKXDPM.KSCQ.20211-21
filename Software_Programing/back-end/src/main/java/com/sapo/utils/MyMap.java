@@ -113,13 +113,13 @@ public class MyMap extends LinkedHashMap<String, Object>{
         return sb.toString();
     }
     /**
-     * Return a {@link utils.MyMap MyMap} that represents the interested substring in a {@link java.lang.String String}.
+     * Return a {@link MyMap} that represents the interested substring in a {@link java.lang.String String}.
      *
      * @author hieudm
      * @param
      * str - {@link java.lang.String String}
      * idx - the index of the first character in the interested substring in the {@link java.lang.String String}
-     * @return the term as {@link utils.MyMap MyMap}
+     * @return the term as {@link MyMap}
      * @throws IllegalArgumentException
      */
     public static MyMap toMyMap(String str, int idx) throws IllegalArgumentException {

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer>, JpaSpecificationExecutor<Invoice> {
-    @Query(value = "select invoices.* from invoices where invoices.vehicle_id = ?", nativeQuery = true)
+//    @Query(value = "select invoices.* from invoices where invoices.vehicle_id = ?", nativeQuery = true)
+//    Invoice findInvoiceByVehicleIdAndStatus(int vehicleId, int status);
+    Invoice findById(int invoiceId);
+
     Invoice findInvoiceByVehicleIdAndStatus(int vehicleId, int status);
 }
