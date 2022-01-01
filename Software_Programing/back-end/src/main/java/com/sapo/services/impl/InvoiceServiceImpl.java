@@ -29,5 +29,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findInvoiceByVehicleIdAndStatus(vehicleId, ConstantVariableCommon.NOT_DONE_INVOICE);
     }
 
+    @Override
+    public void updateInvoiceStatus(Integer invoiceId, Integer status) {
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElse(null);
+        if (invoice != null) {
+            invoice.setStatus(status);
+            invoiceRepository.save(invoice);
+        }
+    }
+
 
 }

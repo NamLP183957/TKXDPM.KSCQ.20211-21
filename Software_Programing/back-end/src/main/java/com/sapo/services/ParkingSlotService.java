@@ -1,6 +1,7 @@
 package com.sapo.services;
 
 import com.sapo.dto.parkingSlot.ParkingSlotDTO;
+import com.sapo.entities.ParkingSlot;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,5 +12,7 @@ public interface ParkingSlotService {
 
     public List<ParkingSlotDTO> getBlankSlotByType(Integer stationId, Integer type);
 
-    boolean updateParkingSLotService(Integer id, Integer status);
+    boolean updateParkingSLotStatus(Integer id, Integer status);
+
+    public ParkingSlot geParkingSlotById(Integer id);
 }

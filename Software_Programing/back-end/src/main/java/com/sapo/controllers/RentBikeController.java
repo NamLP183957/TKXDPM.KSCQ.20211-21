@@ -5,10 +5,7 @@ import com.sapo.dto.PaymentTransaction.PaymentTransactionDTO;
 import com.sapo.dto.form.PaymentForm;
 import com.sapo.dto.parkingSlot.ParkingSlotDTO;
 import com.sapo.dto.vehicle.VehicleDTOResponse;
-import com.sapo.entities.Card;
-import com.sapo.entities.Invoice;
-import com.sapo.entities.PaymentTransaction;
-import com.sapo.entities.Vehicle;
+import com.sapo.entities.*;
 import com.sapo.exception.PaymentException;
 import com.sapo.exception.UnrecognizedException;
 import com.sapo.services.*;
@@ -31,7 +28,7 @@ public class RentBikeController {
     private ParkingSlotService parkingSlotService;
     private VehicleService vehicleService;
     private PaymentTransactionService transactionService;
-    private CardService cardService;
+//    private CardService cardService;
     private InvoiceService invoiceService;
 //
 //    public RentBikeController(){
@@ -70,16 +67,16 @@ public class RentBikeController {
                 return ResponseEntity.badRequest().body("Invalid date expired");
             }*/
             InterbankInterface interbank = new InterbankSubsystem();
-            Card card = new Card();
-            card.setCardCode(paymentForm.getCardCode());
-            card.setCvvCode(paymentForm.getCvvCode());
-            card.setOwner(paymentForm.getOwner());
-            card.setDateExpired(Long.parseLong(paymentForm.getDateExpired()));
+            Card card = paymentForm.getCard();
+//            card.setCardCode(paymentForm.getCardCode());
+//            card.setCvvCode(paymentForm.getCvvCode());
+//            card.setOwner(paymentForm.getOwner());
+//            card.setDateExpired(Long.parseLong(paymentForm.getDateExpired()));
             System.out.println("dateExpired: " + card.getDateExpired());
             PaymentTransactionDTO paymentTransaction = interbank.pay(card, paymentForm.getAmount(), "Deposit");
 
             saveTransaction(paymentTransaction, vehicleId);
-            //vehicleService.updateVehicleStatus(vehicleId, ConstantVariableCommon.RENTED_VEHICLE_STATUS);
+            updateVehicleAndParkingSlot(vehicleId);
             return ResponseEntity.ok(paymentTransaction);
         } catch (PaymentException | UnrecognizedException ex) {
             return ResponseEntity.badRequest().body("Cann't payment");
@@ -161,7 +158,7 @@ public class RentBikeController {
         transaction.setMethod("pay");
         transaction.setErrorCode(paymentTransaction.getErrorCode());
         PaymentTransaction trans = transactionService.saveTransaction(transaction);
-
+        Vehicle vehicle = vehicleService.findVehicleById(vehicleId);
 
         Invoice invoice = new Invoice();
         invoice.setVehicleId(vehicleId);
@@ -170,10 +167,20 @@ public class RentBikeController {
         invoice.setStatus(ConstantVariableCommon.NOT_DONE_INVOICE);
         invoice.setRestartTime(System.currentTimeMillis());
         invoice.setTotalRentTime(0);
+        invoice.setVehicleType(vehicle.getType());
 
         invoiceService.createInvoice(invoice);
     }
 
+
+    private void updateVehicleAndParkingSlot(Integer vehicleId) {
+        Vehicle vehicle = vehicleService.findVehicleById(vehicleId);
+        Integer parkingSlotId = vehicle.getParkingSlotId();
+        ParkingSlot parkingSlot = parkingSlotService.geParkingSlotById(parkingSlotId);
+
+        vehicleService.updateVehicleStatusAndParkingSlot(vehicleId, ConstantVariableCommon.RENTED_VEHICLE_STATUS, 0);
+        parkingSlotService.updateParkingSLotStatus(parkingSlotId, ConstantVariableCommon.BLANK_SLOT_STATUS);
+    }
      /** Kiểm tra xem mã bảo mật có hợp lệ hay không
      * @param bikeCode   - Mã bảo mật cần kiểm tra
      * @return  true nếu mã bảo mật là một chuỗi gồm 3 chữ số, ngược lại là false.

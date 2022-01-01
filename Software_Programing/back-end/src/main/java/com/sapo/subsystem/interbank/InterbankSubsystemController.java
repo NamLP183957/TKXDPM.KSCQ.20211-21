@@ -4,7 +4,7 @@ import com.sapo.dto.PaymentTransaction.PaymentTransactionDTO;
 import com.sapo.entities.Card;
 import com.sapo.entities.PaymentTransaction;
 import com.sapo.exception.*;
-import com.sapo.repositories.CardRepository;
+//import com.sapo.repositories.CardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.sapo.utils.Configs;

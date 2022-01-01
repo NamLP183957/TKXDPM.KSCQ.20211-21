@@ -11,7 +11,7 @@ import java.util.List;
 public interface VehicleService {
   // Lấy ra danh sách vehicle
   List<Vehicle> getListVehicleInStation(int stationId);
-  
+
   //Hàm tìm Vehicle bằng id
   Vehicle findVehicleById(int id);
 
@@ -22,5 +22,5 @@ public interface VehicleService {
   // Tìm xe đang đỗ ở trong parking slot
   VehicleDTOResponse findNotRentVehicleByParkingSlot(int parkingSlotId);
 
-  boolean updateVehicleStatus(Integer vehicleId, Integer status);
+  boolean updateVehicleStatusAndParkingSlot(Integer vehicleId, Integer status, Integer parkingSlotId);
 }

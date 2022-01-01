@@ -57,7 +57,7 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
     }
 
     @Override
-    public boolean updateParkingSLotService(Integer id, Integer status) {
+    public boolean updateParkingSLotStatus(Integer id, Integer status) {
         ParkingSlot parkingSlot = parkingSlotRepository.findById(id).orElse(null);
 
         if (parkingSlot == null) {
@@ -67,5 +67,10 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
             parkingSlotRepository.save(parkingSlot);
             return true;
         }
+    }
+
+    @Override
+    public ParkingSlot geParkingSlotById(Integer id) {
+        return parkingSlotRepository.findById(id).orElse(null);
     }
 }

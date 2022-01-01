@@ -6,9 +6,11 @@ import com.sapo.dto.form.PaymentForm;
 import com.sapo.dto.form.PaymentFormReturnBike;
 import com.sapo.entities.Card;
 import com.sapo.entities.Invoice;
+import com.sapo.entities.ParkingSlot;
 import com.sapo.entities.Vehicle;
 import com.sapo.services.InvoiceService;
 import com.sapo.services.ParkingSlotService;
+import com.sapo.services.VehicleService;
 import com.sapo.subsystem.InterbankSubsystem;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,7 @@ import com.sapo.exception.UnrecognizedException;
 @RestController
 public class ReturnBikeController {
     private static final int RENT_FEE_A_PART_DAY = 200000;
+    private VehicleService vehicleService;
     private ParkingSlotService parkingSlotService;
     private InvoiceService invoiceService;
     /**
@@ -69,8 +72,10 @@ public class ReturnBikeController {
     public ResponseEntity<Object> payment(@RequestBody PaymentFormReturnBike paymentFormReturnBike){
         try{
             Vehicle vehicle = paymentFormReturnBike.getVehicle();
-            long deposit = vehicle.caculateDeposit();
+            Card card = paymentFormReturnBike.getCard();
+            Integer parkingSlotId = paymentFormReturnBike.getParkingSlotId();
 
+            long deposit = vehicle.caculateDeposit();
             Invoice invoice = invoiceService.findNotDoneFollowVehicle(vehicle.getId());
             long feeRent = 0;
             if(vehicle.getStatus() == ConstantVariableCommon.RENTED_VEHICLE_STATUS){
@@ -82,11 +87,11 @@ public class ReturnBikeController {
             long amount = feeRent - deposit;
 
             InterbankInterface interbank = new InterbankSubsystem();
-            Card card = new Card();
-            card.setCardCode(paymentFormReturnBike.getCardCode());
-            card.setCvvCode(paymentFormReturnBike.getCvvCode());
-            card.setOwner(paymentFormReturnBike.getOwner());
-            card.setDateExpired(Long.parseLong(paymentFormReturnBike.getDateExpired()));
+
+//            card.setCardCode(paymentFormReturnBike.getCardCode());
+//            card.setCvvCode(paymentFormReturnBike.getCvvCode());
+//            card.setOwner(paymentFormReturnBike.getOwner());
+//            card.setDateExpired(Long.parseLong(paymentFormReturnBike.getDateExpired()));
             PaymentTransactionDTO paymentTransaction;
 
             if(amount > 0){
@@ -96,13 +101,23 @@ public class ReturnBikeController {
                 // neu tien coc lon hon tien thue thi goi api hoan tien
                 paymentTransaction = interbank.refund(card, (int) -amount , "Payment Return bike !");
             }
-            // update vehicle status
-            // update parking slot status
+            // update vehicle status and parking slot status
+            updateVehicleAndParkingSlot(vehicle.getId(), parkingSlotId);
+            updateInvoice(invoice.getId());
             // update invoice status
             return ResponseEntity.ok(paymentTransaction);
         }catch (PaymentException | UnrecognizedException ex){
             return ResponseEntity.badRequest().body("Cann't payment");
         }
+    }
+
+    private void updateVehicleAndParkingSlot(Integer vehicleId, Integer parkingSlotId) {
+        vehicleService.updateVehicleStatusAndParkingSlot(vehicleId, ConstantVariableCommon.NOT_RENT_VEHICLE_STATUS, parkingSlotId);
+        parkingSlotService.updateParkingSLotStatus(parkingSlotId, ConstantVariableCommon.OCCUPIED_SLOT_STATUS);
+    }
+
+    private void updateInvoice(Integer invoiceId) {
+        invoiceService.updateInvoiceStatus(invoiceId, ConstantVariableCommon.DONE_INVOICE);
     }
 
     /**

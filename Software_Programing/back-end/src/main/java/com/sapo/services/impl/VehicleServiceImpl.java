@@ -94,12 +94,13 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public boolean updateVehicleStatus(Integer vehicleId, Integer status) {
+    public boolean updateVehicleStatusAndParkingSlot(Integer vehicleId, Integer status, Integer parkingSlotId) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
         if (vehicle == null) {
             return false;
         } else {
             vehicle.setStatus(status);
+            vehicle.setParkingSlotId(parkingSlotId);
             vehicleRepository.save(vehicle);
             return true;
         }

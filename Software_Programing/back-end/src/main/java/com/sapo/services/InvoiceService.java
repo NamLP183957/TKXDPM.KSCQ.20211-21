@@ -10,4 +10,6 @@ public interface InvoiceService {
     public Invoice findById(int invoiceId);
 
     public Invoice findNotDoneFollowVehicle(int vehicleId);
+
+    public void updateInvoiceStatus(Integer invoiceId, Integer status);
 }

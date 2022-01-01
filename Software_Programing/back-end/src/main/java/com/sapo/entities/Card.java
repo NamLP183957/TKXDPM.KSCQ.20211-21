@@ -9,26 +9,26 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
+//@Entity
 @Getter
 @Setter
-@Table(name = "cards")
+//@Table(name = "cards")
 @NoArgsConstructor
 public class Card extends BaseEntity{
-    @Column(name = "card_code", length = 50)
+//    @Column(name = "card_code", length = 50)
     private String cardCode;
 
-    @Column(name = "owner", length = 100)
+//    @Column(name = "owner", length = 100)
     private String owner;
 
-    @Column(name = "date_expired", length = 50)
+//    @Column(name = "date_expired", length = 50)
     private long dateExpired;
 
-    @Column(name = "cvv_code", length = 50)
+//    @Column(name = "cvv_code", length = 50)
     private String cvvCode;
-
-    @Column(name = "status")
-    private int status;
+//
+//    @Column(name = "status")
+//    private int status;
 
     public Card(String cardCode, String owner, int cvvCode, String dateExpired) {
         super();
