@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.Name;
 import java.util.List;
 
 @RestController
@@ -30,5 +31,10 @@ public class ViewStationController {
         } else {
             return ResponseEntity.ok(station);
         }
+    }
+
+    @GetMapping("/search/{searchKey}")
+    public ResponseEntity<Object> getStationBySearchKey(@PathVariable(name = "searchKey")String searchKey){
+        return ResponseEntity.ok(stationService.getStationBySearchKey(searchKey));
     }
 }

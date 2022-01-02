@@ -33,6 +33,10 @@ public class StationDTO {
         this.name = station.getName();
         this.address = station.getAddress();
         this.area = station.getArea();
+        this.numOfCurrBike = 0;
+        this.numOfBlankBike = 0;
+        this.numOfBlankElectricBike = 0;
+        this.numOfBlankElectricTwinBike = 0;
     }
 
 }

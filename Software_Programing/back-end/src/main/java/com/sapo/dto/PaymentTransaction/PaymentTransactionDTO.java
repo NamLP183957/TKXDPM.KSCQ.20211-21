@@ -15,6 +15,7 @@ public class PaymentTransactionDTO {
     private String transactionContent;
     private int amount;
     private String createdAt;
+    private String contents;
 
     public PaymentTransactionDTO(String errorCode,Card card, String transactionId, String transactionContent,
                               int amount, String createdAt) {

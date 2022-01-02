@@ -11,4 +11,5 @@ public interface StationService {
     public List<Station> getListStation();
     public Station getStationById(Integer id);
     public StationDTO getStationDetailById(Integer id);
+    public List<Station> getStationBySearchKey(String searchKey);
 }
