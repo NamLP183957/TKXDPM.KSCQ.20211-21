@@ -4,12 +4,10 @@ import com.sapo.common.ConstantVariableCommon;
 import com.sapo.dto.PaymentTransaction.PaymentTransactionDTO;
 import com.sapo.dto.form.PaymentForm;
 import com.sapo.dto.form.PaymentFormReturnBike;
-import com.sapo.entities.Card;
-import com.sapo.entities.Invoice;
-import com.sapo.entities.ParkingSlot;
-import com.sapo.entities.Vehicle;
+import com.sapo.entities.*;
 import com.sapo.services.InvoiceService;
 import com.sapo.services.ParkingSlotService;
+import com.sapo.services.PaymentTransactionService;
 import com.sapo.services.VehicleService;
 import com.sapo.subsystem.InterbankSubsystem;
 import lombok.AllArgsConstructor;
@@ -41,6 +39,7 @@ public class ReturnBikeController {
     private VehicleService vehicleService;
     private ParkingSlotService parkingSlotService;
     private InvoiceService invoiceService;
+    private PaymentTransactionService paymentTransactionService;
     /**
      * Represent the Interbank subsystem
      */
@@ -77,6 +76,7 @@ public class ReturnBikeController {
 
             long deposit = vehicle.caculateDeposit();
             Invoice invoice = invoiceService.findNotDoneFollowVehicle(vehicle.getId());
+
             long feeRent = 0;
             if(vehicle.getStatus() == ConstantVariableCommon.RENTED_VEHICLE_STATUS){
                 feeRent = invoice.caculateManualRentFee();
@@ -87,20 +87,18 @@ public class ReturnBikeController {
             long amount = feeRent - deposit;
 
             InterbankInterface interbank = new InterbankSubsystem();
-
-//            card.setCardCode(paymentFormReturnBike.getCardCode());
-//            card.setCvvCode(paymentFormReturnBike.getCvvCode());
-//            card.setOwner(paymentFormReturnBike.getOwner());
-//            card.setDateExpired(Long.parseLong(paymentFormReturnBike.getDateExpired()));
             PaymentTransactionDTO paymentTransaction;
-
+            String method;
             if(amount > 0){
                 // neu tien thue lon hon tien coc thi goi api tra tien
+                method = "pay";
                 paymentTransaction = interbank.pay(card, (int) amount , "Payment Return bike !");
             }else{
                 // neu tien coc lon hon tien thue thi goi api hoan tien
+                method = "refund";
                 paymentTransaction = interbank.refund(card, (int) -amount , "Payment Return bike !");
             }
+            saveTransaction(paymentTransaction, method);
             // update vehicle status and parking slot status
             updateVehicleAndParkingSlot(vehicle.getId(), parkingSlotId);
             updateInvoice(invoice.getId());
@@ -150,4 +148,14 @@ public class ReturnBikeController {
     public ResponseEntity<Object> getParkingSlot(@PathVariable(name = "stationId")Integer stationId, @PathVariable(name = "type")Integer type){
           return ResponseEntity.ok(parkingSlotService.getBlankSlotByType(stationId, type));
       }
+
+    private void saveTransaction(PaymentTransactionDTO paymentTransaction, String method) {
+        PaymentTransaction transaction = new PaymentTransaction();
+        transaction.setContent(paymentTransaction.getTransactionContent());
+        transaction.setAmount(paymentTransaction.getAmount());
+        // transaction.setCreatedAt(Long.parseLong(paymentTransaction.getCreatedAt()));
+        transaction.setMethod(method);
+        transaction.setErrorCode(paymentTransaction.getErrorCode());
+        PaymentTransaction trans = paymentTransactionService.saveTransaction(transaction);
+    }
 }
