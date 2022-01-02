@@ -1,5 +1,6 @@
 package com.sapo.services.impl;
 
+import com.sapo.dto.station.StationDTO;
 import com.sapo.entities.Station;
 import com.sapo.repositories.StationRepository;
 import com.sapo.services.StationService;
@@ -18,5 +19,23 @@ public class StationServiceImpl implements StationService {
     @Override
     public List<Station> getListStation() {
         return stationRepository.findAll();
+    }
+
+    @Override
+    public Station getStationById(Integer id) {
+        return stationRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public StationDTO getStationDetailById(Integer id) {
+        Station station = stationRepository.findById(id).orElse(null);
+        if (station == null) {
+            return null;
+        } else {
+            StationDTO stationDTO = new StationDTO(station);
+            int numCurrBike = stationRepository.getNumBikeInStation(id);
+            stationDTO.setNumOfCurrBike(numCurrBike);
+            return stationDTO;
+        }
     }
 }

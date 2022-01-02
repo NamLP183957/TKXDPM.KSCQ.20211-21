@@ -29,7 +29,7 @@ public class RentBikeController {
     private VehicleService vehicleService;
     private PaymentTransactionService transactionService;
 //    private CardService cardService;
-    private InvoiceService invoiceService;
+    private InvoiceService invoiceServuice;
 //
 //    public RentBikeController(){
 //
@@ -68,6 +68,8 @@ public class RentBikeController {
             }*/
             InterbankInterface interbank = new InterbankSubsystem();
             Card card = paymentForm.getCard();
+            boolean isRentDay = paymentForm.isRentDay();
+
 //            card.setCardCode(paymentForm.getCardCode());
 //            card.setCvvCode(paymentForm.getCvvCode());
 //            card.setOwner(paymentForm.getOwner());
@@ -76,7 +78,7 @@ public class RentBikeController {
             PaymentTransactionDTO paymentTransaction = interbank.pay(card, paymentForm.getAmount(), "Deposit");
 
             saveTransaction(paymentTransaction, vehicleId);
-            updateVehicleAndParkingSlot(vehicleId);
+            updateVehicleAndParkingSlot(vehicleId, isRentDay);
             return ResponseEntity.ok(paymentTransaction);
         } catch (PaymentException | UnrecognizedException ex) {
             return ResponseEntity.badRequest().body("Cann't payment");
@@ -169,16 +171,19 @@ public class RentBikeController {
         invoice.setTotalRentTime(0);
         invoice.setVehicleType(vehicle.getType());
 
-        invoiceService.createInvoice(invoice);
+        invoiceServuice.createInvoice(invoice);
     }
 
 
-    private void updateVehicleAndParkingSlot(Integer vehicleId) {
+    private void updateVehicleAndParkingSlot(Integer vehicleId, boolean isRentDay) {
         Vehicle vehicle = vehicleService.findVehicleById(vehicleId);
         Integer parkingSlotId = vehicle.getParkingSlotId();
         ParkingSlot parkingSlot = parkingSlotService.geParkingSlotById(parkingSlotId);
-
-        vehicleService.updateVehicleStatusAndParkingSlot(vehicleId, ConstantVariableCommon.RENTED_VEHICLE_STATUS, 0);
+        if (isRentDay) {
+            vehicleService.updateVehicleStatusAndParkingSlot(vehicleId, ConstantVariableCommon.RENTED_DAY_VEHICLE_STATUS, 0);
+        } else {
+            vehicleService.updateVehicleStatusAndParkingSlot(vehicleId, ConstantVariableCommon.RENTED_VEHICLE_STATUS, 0);
+        }
         parkingSlotService.updateParkingSLotStatus(parkingSlotId, ConstantVariableCommon.BLANK_SLOT_STATUS);
     }
      /** Kiểm tra xem mã bảo mật có hợp lệ hay không

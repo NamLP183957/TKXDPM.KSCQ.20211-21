@@ -17,4 +17,6 @@ public class PaymentForm {
     private Card card;
 
     private int amount;
+
+    private boolean rentDay;
 }

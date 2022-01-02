@@ -51,7 +51,9 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public List<Vehicle> getListVehicleInRentTime() {
-        return vehicleRepository.findVehicleByStatus(1);
+        List<Vehicle> rentVehicles = vehicleRepository.findVehicleByStatus(ConstantVariableCommon.RENTED_VEHICLE_STATUS);
+        rentVehicles.addAll(vehicleRepository.findVehicleByStatus(ConstantVariableCommon.RENTED_DAY_VEHICLE_STATUS));
+        return rentVehicles;
     }
 
     @Override

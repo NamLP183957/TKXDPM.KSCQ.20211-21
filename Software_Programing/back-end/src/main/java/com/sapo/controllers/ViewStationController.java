@@ -1,13 +1,11 @@
 package com.sapo.controllers;
 
+import com.sapo.dto.station.StationDTO;
 import com.sapo.entities.Station;
 import com.sapo.services.StationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +20,15 @@ public class ViewStationController {
     public ResponseEntity<Object> getListStation() {
         List<Station> listStation = stationService.getListStation();
         return ResponseEntity.ok(listStation);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getStationById(@PathVariable(name = "id")Integer id) {
+        StationDTO station = stationService.getStationDetailById(id);
+        if (station == null) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok(station);
+        }
     }
 }
