@@ -50,10 +50,15 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> getListVehicleInRentTime() {
+    public List<VehicleDTOResponse> getListVehicleInRentTime() {
         List<Vehicle> rentVehicles = vehicleRepository.findVehicleByStatus(ConstantVariableCommon.RENTED_VEHICLE_STATUS);
         rentVehicles.addAll(vehicleRepository.findVehicleByStatus(ConstantVariableCommon.RENTED_DAY_VEHICLE_STATUS));
-        return rentVehicles;
+        List<VehicleDTOResponse> vehicleDTOResponses = new ArrayList<>();
+        rentVehicles.forEach(vehicle -> {
+            VehicleDTOResponse vehicleDTOResponse = findVehicleInRentTimeById(vehicle.getId());
+            vehicleDTOResponses.add(vehicleDTOResponse);
+        });
+        return vehicleDTOResponses;
     }
 
     @Override
@@ -69,6 +74,7 @@ public class VehicleServiceImpl implements VehicleService {
         Invoice invoice = invoiceRepository.findInvoiceByVehicleIdAndStatus(vehicle.getId(), 1);
         long totalRentTime = new Date().getTime() - invoice.getStartTime();
         vehicleDTOResponse.setTimeRented(totalRentTime);
+        vehicleDTOResponse.setStartTime(invoice.getStartTime());
         double fee = 0;
         if (totalRentTime <= 600) {
             fee = 0;

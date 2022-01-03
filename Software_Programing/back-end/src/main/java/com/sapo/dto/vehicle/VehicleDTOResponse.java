@@ -16,6 +16,7 @@ public class VehicleDTOResponse {
   private String licensePlate;
   private int battery;
   private int maxTime;
+  private long startTime;
   private long timeRented;
   private double fee;
   private int status;

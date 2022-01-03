@@ -15,7 +15,7 @@ public interface VehicleService {
   //Hàm tìm Vehicle bằng id
   Vehicle findVehicleById(int id);
 
-  List<Vehicle> getListVehicleInRentTime();
+  List<VehicleDTOResponse> getListVehicleInRentTime();
 
   VehicleDTOResponse findVehicleInRentTimeById(int id);
 
