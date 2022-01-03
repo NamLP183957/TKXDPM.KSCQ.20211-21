@@ -25,7 +25,7 @@ function RentingBike(props) {
         const date = new Date(timestamp);
         const hour = Number(date.getHours()) > 9 ? date.getHours() : `0${date.getHours()}`;
         const min = Number(date.getMinutes()) > 9 ? date.getMinutes() : `0${date.getMinutes()}`;
-        return `${hour}:${min}`;
+        return `${hour}h ${min}p`;
     };
 
     return (

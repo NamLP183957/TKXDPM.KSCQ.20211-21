@@ -7,7 +7,9 @@ import PopupFooter from "../popup/PopupFooter";
 import PopupTitle from "../popup/PopupTitle";
 import { GrCaretNext } from "react-icons/gr";
 import { getDetailStation } from "../../services/ViewStation";
+import { useHistory } from "react-router-dom";
 function StationDetail(props) {
+  const history = useHistory();
   const { station } = props;
   const [stationDetail, setStationDetail] = useState(station);
   useEffect(() => {
@@ -29,7 +31,8 @@ function StationDetail(props) {
 
   const handleOnClick = (stationId) => {
     history.push({
-      pathname: `/admin/employees/update-employee/${stationId}`,
+      // pathname: `/admin/employees/update-employee/${stationId}`,
+      pathname: `/station/vehicle/${stationId}`,
       stationId: stationId,
     });
   };

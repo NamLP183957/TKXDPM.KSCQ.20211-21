@@ -1,7 +1,11 @@
+import React, { useEffect, useState } from "react";
+import { Button, Card } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import VehicleService from "../../services/VehicleService";
-import "./css/vehicle.css";
-
+import "./css/Vehicle.css";
+import {BIKE_TYPE} from '../../variables/ConstantCommon'
 function Vehicle(props) {
+  const history = useHistory();
   React.useEffect(() => {
     // Specify how to clean up after this effect:
     return function cleanup() {
@@ -15,8 +19,8 @@ function Vehicle(props) {
 
   const [vehicles, setVehicles] = useState([]);
 
-  const stationId = props.stationId;
-
+  const {stationId} = props.location;
+  console.log("stationId: ", stationId);
   useEffect(() => {
     async function fetchvehicleList() {
       try {
@@ -26,6 +30,7 @@ function Vehicle(props) {
             console.log("data: ", data);
             setVehicles(
               data.map((vehicle) => {
+                console.log(vehicle);
                 return {
                   select: false,
                   parkingSlotId: vehicle.parkingSlotId,
@@ -37,25 +42,27 @@ function Vehicle(props) {
                 };
               })
             );
-            setIsLoaded(true);
+            // setIsLoaded(true);
           })
           .catch(function (error) {
             console.log("ERROR: " + error.response.data.status);
           });
       } catch (error) {
         console.log("Failed to fetch vehicle list: ", error.message);
-        setError(error);
+        // setError(error);
       }
     }
     fetchvehicleList();
-  }, [filters]);
+  }, []);
 
   const handleOnClick = (vehicle) => {
     history.push({
       pathname: "/rent-bike",
     });
   };
-
+  if (vehicles.length === 0) {
+    return <div style={{fontSize: '25px', color: 'green'}}>Không có xe nào trong bãi</div>
+  }
   return (
     <div>
       {vehicles.map((vehicle) => (
@@ -65,14 +72,14 @@ function Vehicle(props) {
             <div>Vị trí: {vehicle.parkingSlotId}</div>
             <div>Biển số: {vehicle.licensePlate}</div>
             <div>Loại xe: {BIKE_TYPE[vehicle.type]}</div>
-            <div>Thời lượng pin (dành cho xe điện): {vehicle.battery}</div>
+            <div>Thời lượng pin (dành cho xe điện): {vehicle.battery} %</div>
             <div>
-              Thời gian sử dụng tối đa (dành cho xe điện): {vehicle.maxTime}
+              Thời gian sử dụng tối đa (dành cho xe điện): {vehicle.maxTime} phút
             </div>
             <br />
-            <Button variant="danger" onClick={() => handleOnClick()}>
+            {/* <Button variant="danger" onClick={() => handleOnClick()}>
               Thuê xe
-            </Button>
+            </Button> */}
           </Card.Body>
         </Card>
       ))}

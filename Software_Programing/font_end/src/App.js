@@ -7,6 +7,8 @@ import { Route, Switch } from 'react-router-dom';
 import RentTimeScreen from './components/rentTimeBike.js/RentTimeScreen';
 import ListStationScreen from './components/station/ListStationScreen';
 import logo from './logo.png'
+import StationScree from './components/station/StationScreen';
+import StationScreen from './components/station/StationScreen';
 function App() {
   return (
     <div className="App">
@@ -16,7 +18,7 @@ function App() {
       <Switch>
         <Route
           path="/station/*"
-          component={ListStationScreen}
+          component={StationScreen}
           exact
         />
         <Route 
