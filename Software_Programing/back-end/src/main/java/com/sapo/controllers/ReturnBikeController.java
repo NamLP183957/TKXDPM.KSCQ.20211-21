@@ -93,10 +93,12 @@ public class ReturnBikeController {
                 // neu tien thue lon hon tien coc thi goi api tra tien
                 method = "pay";
                 paymentTransaction = interbank.pay(card, (int) amount , "Payment Return bike !");
+//                saveTransaction(paymentTransaction, "pay");
             }else{
                 // neu tien coc lon hon tien thue thi goi api hoan tien
                 method = "refund";
                 paymentTransaction = interbank.refund(card, (int) -amount , "Payment Return bike !");
+//                saveTransaction(paymentTransaction, "refund");
             }
             saveTransaction(paymentTransaction, method);
             // update vehicle status and parking slot status
