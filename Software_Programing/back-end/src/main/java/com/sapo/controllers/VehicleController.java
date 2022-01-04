@@ -33,8 +33,8 @@ public class VehicleController {
     }
 
     @GetMapping("/list-in-rent-time")
-    public ResponseEntity<List<Vehicle>> getListVehicleInRentTime(){
-        List<Vehicle> vehicles = vehicleService.getListVehicleInRentTime();
+    public ResponseEntity<List<VehicleDTOResponse>> getListVehicleInRentTime(){
+        List<VehicleDTOResponse> vehicles = vehicleService.getListVehicleInRentTime();
         return ResponseEntity.ok(vehicles);
     }
 

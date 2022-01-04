@@ -1,5 +1,6 @@
 package com.sapo.services.impl;
 
+import com.sapo.common.Common;
 import com.sapo.common.ConstantVariableCommon;
 import com.sapo.dto.vehicle.VehicleDTOResponse;
 import com.sapo.entities.Invoice;
@@ -37,7 +38,10 @@ public class VehicleServiceImpl implements VehicleService {
         List<Vehicle> vehicles = new ArrayList<>();
         parkingSlots.forEach(parkingSlot -> {
             Vehicle vehicle = vehicleRepository.findVehicleByParkingSlotId(parkingSlot.getId());
-            vehicles.add(vehicle);
+            if (vehicle != null) {
+                vehicles.add(vehicle);
+            }
+
         });
         return vehicles;
     }
@@ -50,10 +54,15 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> getListVehicleInRentTime() {
+    public List<VehicleDTOResponse> getListVehicleInRentTime() {
         List<Vehicle> rentVehicles = vehicleRepository.findVehicleByStatus(ConstantVariableCommon.RENTED_VEHICLE_STATUS);
         rentVehicles.addAll(vehicleRepository.findVehicleByStatus(ConstantVariableCommon.RENTED_DAY_VEHICLE_STATUS));
-        return rentVehicles;
+        List<VehicleDTOResponse> vehicleDTOResponses = new ArrayList<>();
+        rentVehicles.forEach(vehicle -> {
+            VehicleDTOResponse vehicleDTOResponse = findVehicleInRentTimeById(vehicle.getId());
+            vehicleDTOResponses.add(vehicleDTOResponse);
+        });
+        return vehicleDTOResponses;
     }
 
     @Override
@@ -69,23 +78,28 @@ public class VehicleServiceImpl implements VehicleService {
         Invoice invoice = invoiceRepository.findInvoiceByVehicleIdAndStatus(vehicle.getId(), 1);
         long totalRentTime = new Date().getTime() - invoice.getStartTime();
         vehicleDTOResponse.setTimeRented(totalRentTime);
-        double fee = 0;
-        if (totalRentTime <= 600) {
-            fee = 0;
+        vehicleDTOResponse.setStartTime(invoice.getStartTime());
+//        double fee = 0;
+//        if (totalRentTime <= 600) {
+//            fee = 0;
+//        }
+//        else {
+//            if (totalRentTime <= 1800) {
+//                fee = 10000;
+//            }
+//            else {
+//                fee = 10 + (totalRentTime - 1800)/900 * 3000;
+//                if (((totalRentTime - 1800) % 900) > 0) {
+//                    fee = fee + 3000;
+//                }
+//            }
+//        }
+//        if (vehicle.getType() != 1) fee = fee * 1.5;
+        if (vehicle.getStatus() == ConstantVariableCommon.RENTED_DAY_VEHICLE_STATUS) {
+            vehicleDTOResponse.setFee(Common.getStringPriceVN(invoice.caculateRentDayFee()));
+        } else {
+            vehicleDTOResponse.setFee(Common.getStringPriceVN(invoice.caculateManualRentFee()));
         }
-        else {
-            if (totalRentTime <= 1800) {
-                fee = 10000;
-            }
-            else {
-                fee = 10 + (totalRentTime - 1800)/900 * 3000;
-                if (((totalRentTime - 1800) % 900) > 0) {
-                    fee = fee + 3000;
-                }
-            }
-        }
-        if (vehicle.getType() != 1) fee = fee * 1.5;
-        vehicleDTOResponse.setFee(fee);
         return vehicleDTOResponse;
     }
 

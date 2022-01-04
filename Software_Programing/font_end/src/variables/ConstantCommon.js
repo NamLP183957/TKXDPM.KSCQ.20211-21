@@ -1,6 +1,6 @@
 const BIKE_TYPE = {
     1: 'Xe đạp đơn thường',
-    2: 'Xe đạp đôi điện',
+    2: 'Xe đạp đơn điện',
     3: 'Xe đạp đôi thường',
     4: 'Xe đạp đôi điện'
 }
