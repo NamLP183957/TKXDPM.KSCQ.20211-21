@@ -3,7 +3,7 @@ import { Button, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import VehicleService from "../../services/VehicleService";
 import "./css/Vehicle.css";
-import {BIKE_TYPE} from '../../variables/ConstantCommon'
+import { BIKE_TYPE } from "../../variables/ConstantCommon";
 function Vehicle(props) {
   const history = useHistory();
   React.useEffect(() => {
@@ -19,7 +19,7 @@ function Vehicle(props) {
 
   const [vehicles, setVehicles] = useState([]);
 
-  const {stationId} = props.location;
+  const { stationId } = props.location;
   console.log("stationId: ", stationId);
   useEffect(() => {
     async function fetchvehicleList() {
@@ -61,20 +61,24 @@ function Vehicle(props) {
     });
   };
   if (vehicles.length === 0) {
-    return <div style={{fontSize: '25px', color: 'green'}}>Không có xe nào trong bãi</div>
+    return (
+      <div style={{ fontSize: "25px", color: "green" }}>
+        Không có xe nào trong bãi
+      </div>
+    );
   }
   return (
     <div>
       {vehicles.map((vehicle) => (
         <Card style={{ width: "18rem" }} className="card">
           <Card.Body>
-            <Card.Title>Danh sách xe</Card.Title>
-            <div>Vị trí: {vehicle.parkingSlotId}</div>
+            <Card.Title>Vị trí: {vehicle.parkingSlotId}</Card.Title>
             <div>Biển số: {vehicle.licensePlate}</div>
             <div>Loại xe: {BIKE_TYPE[vehicle.type]}</div>
             <div>Thời lượng pin (dành cho xe điện): {vehicle.battery} %</div>
             <div>
-              Thời gian sử dụng tối đa (dành cho xe điện): {vehicle.maxTime} phút
+              Thời gian sử dụng tối đa (dành cho xe điện): {vehicle.maxTime}{" "}
+              phút
             </div>
             <br />
             {/* <Button variant="danger" onClick={() => handleOnClick()}>

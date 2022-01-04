@@ -1,12 +1,12 @@
-import React from 'react'
-import StationRouter from './StationRouter'
+import React from "react";
+import StationRouter from "./StationRouter";
 
 function StationScreen() {
-    return (
-        <div>
-            <StationRouter />
-        </div>
-    )
+  return (
+    <div>
+      <StationRouter />
+    </div>
+  );
 }
 
-export default StationScreen
+export default StationScreen;
