@@ -8,7 +8,9 @@ function ListRentBikeScreen() {
     const [error, setError] = useState();
     const [listBike, setListBike] = useState([]);
     useEffect(() => {
-        setInterval((async() => {
+        setInterval(
+            () => {
+            (async() => {
             try {
                 const resp = await axios.get("http://localhost:8080/api/vehicles/list-in-rent-time");
                 console.log(resp);
@@ -16,7 +18,9 @@ function ListRentBikeScreen() {
             } catch (error) {
                 setError("Không thể tải dữ liệu")
             }
-        })(), 60000);
+        })() }
+        , 60000);
+
     }, [])
 
 
