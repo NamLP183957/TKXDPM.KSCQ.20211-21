@@ -22,6 +22,14 @@ public class InterbankSubsystemController {
     private static InterbankBoundary interbankBoundary = new InterbankBoundary();
     private static String token = "";
     private static Logger LOGGER = LoggerFactory.getLogger(InterbankSubsystemController.class.getName());
+
+    /**
+     * Phương thức này dùng để thanh toán tiền cho interbank
+     * @param card      - thẻ của khách hàng
+     * @param amount    - số tiền giao dịch
+     * @param contents  - nội dung thanh toán
+     * @return          - nội dung giao dịch
+     */
     public PaymentTransactionDTO pay(Card card, int amount, String contents) {
 
         Map<String, Object> requestMap = generateRequestMap(card, amount, contents, PAY_COMMAND);
@@ -32,13 +40,20 @@ public class InterbankSubsystemController {
         try {
             response = MyMap.toMyMap(responseText, 0);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            //throw new UnrecognizedException();
+            //e.printStackTrace();
+            throw new UnrecognizedException();
         }
 
         return makePaymentTransaction(response);
     }
 
+    /**
+     * Ơhuwong thức này dùng để hoàn trả tiền cho khách hàng
+     * @param card      - thẻ của khách hàng
+     * @param amount    - số tiền giao dịch
+     * @param contents  - nội dung thanh toán
+     * @return          - nội dung giao dịch
+     */
     public PaymentTransactionDTO refund(Card card, int amount, String contents) {
         Map<String, Object> requestMap = generateRequestMap(card, amount, contents, REFUND_COMMAND);
         String responseText = interbankBoundary.query(Configs.PROCESS_TRANSACTION_URL, token, generateData(requestMap));
@@ -46,8 +61,8 @@ public class InterbankSubsystemController {
         try {
             response = MyMap.toMyMap(responseText, 0);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            //throw new UnrecognizedException();
+            //e.printStackTrace();
+            throw new UnrecognizedException();
         }
 
         return makePaymentTransaction(response);
@@ -57,7 +72,11 @@ public class InterbankSubsystemController {
         return ((MyMap) data).toJSON();
     }
 
-
+    /**
+     * Phương thức này dùng để chuyển đổi kết quả trả ở đối tượng MyMap về nội dung giao dịch
+     * @param response  - kêt quả trả về ở đối tượng MyMap
+     * @return          - nội dung giao dịch.
+     */
     private PaymentTransactionDTO makePaymentTransaction(MyMap response) {
         if (response == null)
             return null;
@@ -105,15 +124,7 @@ public class InterbankSubsystemController {
 
     private Map<String, Object> generateRequestMap(Card card, int amount, String contents, String command) {
         Map<String, Object> transaction = new MyMap();
-
-//        try {
-//            transaction.putAll(MyMap.toMyMap(card));
-//
-//        } catch (IllegalArgumentException | IllegalAccessException e) {
-//            // TODO Auto-generated catch block
-//            //throw new InvalidCardException();
-//            e.printStackTrace();
-//        }
+        
         transaction.put("command", command);
         transaction.put("cardCode", card.getCardCode());
         transaction.put("owner", card.getOwner());

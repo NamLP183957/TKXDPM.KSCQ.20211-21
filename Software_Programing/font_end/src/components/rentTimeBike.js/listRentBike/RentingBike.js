@@ -31,6 +31,25 @@ function RentingBike(props) {
         : `0${date.getMinutes()}`;
     return `${hour}h ${min}p`;
   };
+    // return (
+        
+    //     <Card style={{width: '18rem'}} className='card'>
+    //         <Card.Body>
+    //             <Card.Title>Xe đang thuê</Card.Title>
+    //             <div>Biển số: {bike.licensePlate}</div>
+    //             <div>Loại xe: {BIKE_TYPE[bike.type]}</div>
+    //             <div>Thời gian bắt đầu thuê xe: {toLocaleDateString(bike.startTime)}</div>
+    //             <div>Thời gian đã thuê xe: {toLocaleDateString(bike.timeRented)}</div>
+    //             <div>Số tiền phải trả: {bike.fee}</div>
+    //             <div>Thời lượng pin (dành cho xe điện): {bike.battery}</div>
+    //             <div>Thời gian sử dụng tối đa (dành cho xe điện): {bike.maxTime}</div>
+    //             <br />
+    //             <Button variant='warning'>Tạm dừng</Button>
+    //             <span />
+    //             <Button variant="danger" onClick={() => handleOnClick()}>Trả xe</Button>
+    //         </Card.Body>
+    //     </Card>
+    // )
 
   return (
     <Card style={{ width: "18rem" }} className="card">
