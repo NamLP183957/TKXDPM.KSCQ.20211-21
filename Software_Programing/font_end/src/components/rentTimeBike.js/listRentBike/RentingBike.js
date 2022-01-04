@@ -29,6 +29,7 @@ function RentingBike(props) {
     };
 
     return (
+        
         <Card style={{width: '18rem'}} className='card'>
             <Card.Body>
                 <Card.Title>Xe đang thuê</Card.Title>
