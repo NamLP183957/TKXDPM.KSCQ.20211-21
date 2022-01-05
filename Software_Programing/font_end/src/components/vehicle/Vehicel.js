@@ -20,14 +20,12 @@ function Vehicle(props) {
   const [vehicles, setVehicles] = useState([]);
 
   const { stationId } = props.location;
-  console.log("stationId: ", stationId);
   useEffect(() => {
     async function fetchvehicleList() {
       try {
         VehicleService.getListVehicleInStation(stationId)
           .then((res) => {
             const data = res.data;
-            console.log("data: ", data);
             setVehicles(
               data.map((vehicle) => {
                 console.log(vehicle);
@@ -55,9 +53,9 @@ function Vehicle(props) {
     fetchvehicleList();
   }, []);
 
-  const handleOnClick = (vehicle) => {
+  const handleOnClick = () => {
     history.push({
-      pathname: "/rent-bike",
+      pathname: "/rent-bike/",
     });
   };
   if (vehicles.length === 0) {
@@ -75,15 +73,12 @@ function Vehicle(props) {
             <Card.Title>Vị trí: {vehicle.parkingSlotId}</Card.Title>
             <div>Biển số: {vehicle.licensePlate}</div>
             <div>Loại xe: {BIKE_TYPE[vehicle.type]}</div>
-            <div>Thời lượng pin (dành cho xe điện): {vehicle.battery} %</div>
-            <div>
-              Thời gian sử dụng tối đa (dành cho xe điện): {vehicle.maxTime}{" "}
-              phút
-            </div>
+            {vehicle.type === 2 || vehicle.type === 4 ? <div>Thời lượng pin: {vehicle.battery} %</div> : null}
+            {vehicle.type === 2 || vehicle.type === 4 ? <div>Thời gian sử dụng tối đa: {vehicle.maxTime} phút</div> : null}
             <br />
-            {/* <Button variant="danger" onClick={() => handleOnClick()}>
+            <Button variant="danger" onClick={() => handleOnClick()}>
               Thuê xe
-            </Button> */}
+            </Button>
           </Card.Body>
         </Card>
       ))}
