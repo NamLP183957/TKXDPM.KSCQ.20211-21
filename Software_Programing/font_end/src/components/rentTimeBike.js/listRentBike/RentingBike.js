@@ -62,8 +62,11 @@ function RentingBike(props) {
         </div>
         <div>Thời gian đã thuê xe: {toLocaleDateString(bike.timeRented)}</div>
         <div>Số tiền phải trả: {bike.fee}</div>
-        <div>Thời lượng pin (dành cho xe điện): {bike.battery}</div>
-        <div>Thời gian sử dụng tối đa (dành cho xe điện): {bike.maxTime}</div>
+        {(bike.type === 2 || bike.type === 4) && 
+          <><div>Thời lượng pin (dành cho xe điện): {bike.battery}</div>
+          <div>Thời gian sử dụng tối đa (dành cho xe điện): {bike.maxTime}</div></>
+        }
+        
         <br />
         <Button variant="warning">Tạm dừng</Button>
         <span />

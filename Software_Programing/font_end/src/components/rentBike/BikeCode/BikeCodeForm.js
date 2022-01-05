@@ -25,9 +25,9 @@ function BikeCodeForm(props) {
             // const resp = await axios.post("http://localhost:8080/api/rentbike/process-bike-code", bikeCode, {
             //     headers: {"Content-Type": "application/json"}
             // });
-            const resp = postBikeCode(bikeCode);
+            const resp = await postBikeCode(bikeCode);
             if (resp.status !== 200) {
-                console.log("error");
+                setError("Mã code không đúng hoặc ô trống không có xe")
             } else {
                 history.push({
                     pathname: '/rent-bike/bike-info',
