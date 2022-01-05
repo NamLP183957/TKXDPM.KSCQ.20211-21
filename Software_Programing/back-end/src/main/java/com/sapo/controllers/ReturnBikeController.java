@@ -30,11 +30,18 @@ import java.util.concurrent.TimeUnit;
 import com.sapo.exception.PaymentException;
 import com.sapo.exception.UnrecognizedException;
 
+/**
+ * Class nay chua cac phuong thuc thuc hien qua trinh tra xe
+ * @author Nghia_LM_20183960
+ */
 @RequestMapping("api/return-bike")
 @CrossOrigin("http://localhost:3000")
 @AllArgsConstructor
 @RestController
 public class ReturnBikeController {
+    /**
+     * phi thue trong 1 ngay
+     */
     private static final int RENT_FEE_A_PART_DAY = 200000;
     private VehicleService vehicleService;
     private ParkingSlotService parkingSlotService;
@@ -45,28 +52,11 @@ public class ReturnBikeController {
      */
       private InterbankInterface interbank;
 
-//    /**
-//     * Thuc hien thanh toan tien thue xe cho khach hang
-//     * @param card: the card nguoi thanh toan
-//     * @param amount: so tien can thanh toan
-//     * @param contents: noi dung giao dich
-//     * @return result: phan hoi giao dich da thuc hien thanh cong hay chua
-//     */
-//      @PostMapping("/process-transaction")
-//      public Map<String, Object> processTransactionReturnBike(@RequestBody Card card, @RequestBody int amount, @RequestBody String contents ){
-//          Map<String, Object> result = new MyMap();
-//          result.put("RESULT", "PAYMENT FAILED!");
-//          try{
-//              PaymentTransactionDTO transaction = this.interbank.refund(card, amount, contents);
-//              result.put("RESULT", "PAYMENT SUCCESSFUL!");
-//              result.put("MESSAGE", "You have successfully paid!");
-//          }catch (PaymentException | UnrecognizedException ex){
-//                result.put("MESSAGE", ex.getMessage());
-//          }
-//
-//          return result;
-//      }
-
+    /**
+     * thanh toan tien thue xe
+     * @param paymentFormReturnBike thong tin thanh toan gom card, tien thue, thog tin ve xe
+     * @return paymentTransaction: thong tin giao dich
+     */
     @PostMapping("/process-transaction")
     public ResponseEntity<Object> payment(@RequestBody PaymentFormReturnBike paymentFormReturnBike){
         try{
@@ -111,11 +101,20 @@ public class ReturnBikeController {
         }
     }
 
+    /**
+     * cap nhat lai thong tin ve xe va trang thai cho de xe
+     * @param vehicleId: id cua xe
+     * @param parkingSlotId: id cho trong de xe
+     */
     private void updateVehicleAndParkingSlot(Integer vehicleId, Integer parkingSlotId) {
         vehicleService.updateVehicleStatusAndParkingSlot(vehicleId, ConstantVariableCommon.NOT_RENT_VEHICLE_STATUS, parkingSlotId);
         parkingSlotService.updateParkingSLotStatus(parkingSlotId, ConstantVariableCommon.OCCUPIED_SLOT_STATUS);
     }
 
+    /**
+     * cap nhat lai thong tin hoa don
+     * @param invoiceId: id hoa don
+     */
     private void updateInvoice(Integer invoiceId) {
         invoiceService.updateInvoiceStatus(invoiceId, ConstantVariableCommon.DONE_INVOICE);
     }
@@ -146,11 +145,22 @@ public class ReturnBikeController {
           return rentFee;
       }
 
+    /**
+     * lay ra cho de xe con trong theo loai xe
+     * @param stationId: id cua bai de xe
+     * @param type: loai xe
+     * @return
+     */
       @GetMapping("/get-parking-slot/{stationId}/{type}")
     public ResponseEntity<Object> getParkingSlot(@PathVariable(name = "stationId")Integer stationId, @PathVariable(name = "type")Integer type){
           return ResponseEntity.ok(parkingSlotService.getBlankSlotByType(stationId, type));
       }
 
+    /**
+     * luu thong tin giao dich vao database
+     * @param paymentTransaction: thong tin giao dich
+     * @param method: phuong thuc thanh toan giao dich
+     */
     private void saveTransaction(PaymentTransactionDTO paymentTransaction, String method) {
         PaymentTransaction transaction = new PaymentTransaction();
         transaction.setContent(paymentTransaction.getTransactionContent());

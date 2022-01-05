@@ -21,9 +21,20 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ParkingSlotServiceImpl implements ParkingSlotService {
+    /**
+     * Ghi lai hanh dong vao nhat ky
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(ParkingSlotServiceImpl.class.toString());
+    /**
+     * doi tuong parkingSlotRpository
+     */
     private ParkingSlotRepository parkingSlotRepository;
 
+    /**
+     * Lay ra cho trong de xe trong bai ung voi ma code cua xe
+     * @param vehicleCodeInput ma xe nhap vao
+     * @return
+     */
     @Override
     public ParkingSlotDTO processBikeCode(String vehicleCodeInput) {
         ParkingSlotDTO parkingSlotDTO = new ParkingSlotDTO();
@@ -46,6 +57,12 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
         else return new ParkingSlotDTO(parkingSlot);
     }
 
+    /**
+     * lay ra danh sach cho trong theo loai xe
+     * @param stationId id bai xe
+     * @param type loai xe
+     * @return
+     */
     @Override
     public List<ParkingSlotDTO> getBlankSlotByType(Integer stationId, Integer type) {
         List<ParkingSlot> parkingSlots = parkingSlotRepository.findByStationIdAndTypeAndStatus(stationId, type, ConstantVariableCommon.BLANK_SLOT_STATUS);
@@ -56,6 +73,12 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
         return listSlotDto;
     }
 
+    /**
+     * cap nhat trang thai cho cho trong de xe
+     * @param id id cho trong
+     * @param status trang thai
+     * @return
+     */
     @Override
     public boolean updateParkingSLotStatus(Integer id, Integer status) {
         ParkingSlot parkingSlot = parkingSlotRepository.findById(id).orElse(null);
@@ -69,6 +92,11 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
         }
     }
 
+    /**
+     * lay ra cho trong trong bai theo id
+     * @param id id cho trong
+     * @return
+     */
     @Override
     public ParkingSlot geParkingSlotById(Integer id) {
         return parkingSlotRepository.findById(id).orElse(null);
