@@ -124,7 +124,7 @@ public class InterbankSubsystemController {
 
     private Map<String, Object> generateRequestMap(Card card, int amount, String contents, String command) {
         Map<String, Object> transaction = new MyMap();
-        
+
         transaction.put("command", command);
         transaction.put("cardCode", card.getCardCode());
         transaction.put("owner", card.getOwner());
