@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import RentTimeScreen from '../rentTimeBike.js/RentTimeScreen'
+import RentTimeScreen from '../rentTimeBike/RentTimeScreen'
 import StationScreen from './station/StationScreen'
 import TransactionResult from './station/TransactionResult'
 

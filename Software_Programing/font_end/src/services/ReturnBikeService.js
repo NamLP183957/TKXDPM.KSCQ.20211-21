@@ -1,5 +1,6 @@
 import axios from "axios"
-import {SERVER_PORT} from '../variables/Server'
+import { SERVER_PORT } from "../variables/Server";
+
 const RETURNBIKE_API_URL = `http://localhost:${SERVER_PORT}/api/return-bike`
 
 const getParkingSLot = (stationId, type) => {

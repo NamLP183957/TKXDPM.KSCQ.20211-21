@@ -4,7 +4,7 @@ import {Button} from 'react-bootstrap'
 import ReturnBikeScreen from './components/returnBike/ReturnBikeScreen';
 import Navbars from './components/navbar/Navbars';
 import { Route, Switch } from 'react-router-dom';
-import RentTimeScreen from './components/rentTimeBike.js/RentTimeScreen';
+import RentTimeScreen from './components/rentTimeBike/RentTimeScreen';
 import ListStationScreen from './components/station/ListStationScreen';
 import logo from './logo.png'
 import StationScree from './components/station/StationScreen';
