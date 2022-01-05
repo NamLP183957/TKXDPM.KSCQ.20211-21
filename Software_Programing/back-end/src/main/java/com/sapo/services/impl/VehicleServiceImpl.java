@@ -68,15 +68,15 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleDTOResponse findVehicleInRentTimeById(int id) {
         Vehicle vehicle = vehicleRepository.findVehicleById(id);
-        VehicleDTOResponse vehicleDTOResponse = new VehicleDTOResponse();
-        vehicleDTOResponse.setId(vehicle.getId());
-        vehicleDTOResponse.setType(vehicle.getType());
-        vehicleDTOResponse.setLicensePlate(vehicle.getLicensePlate());
-        vehicleDTOResponse.setBattery(vehicle.getBattery());
-        vehicleDTOResponse.setMaxTime(vehicle.getMaxTime());
-        vehicleDTOResponse.setStatus(vehicle.getStatus());
+        VehicleDTOResponse vehicleDTOResponse = new VehicleDTOResponse(vehicle);
+//        vehicleDTOResponse.setId(vehicle.getId());
+//        vehicleDTOResponse.setType(vehicle.getType());
+//        vehicleDTOResponse.setLicensePlate(vehicle.getLicensePlate());
+//        vehicleDTOResponse.setBattery(vehicle.getBattery());
+//        vehicleDTOResponse.setMaxTime(vehicle.getMaxTime());
+//        vehicleDTOResponse.setStatus(vehicle.getStatus());
         Invoice invoice = invoiceRepository.findInvoiceByVehicleIdAndStatus(vehicle.getId(), 1);
-        long totalRentTime = new Date().getTime() - invoice.getStartTime();
+        long totalRentTime = new Date().getTime() - invoice.getRestartTime() + invoice.getTotalRentTime();
         vehicleDTOResponse.setTimeRented(totalRentTime);
         vehicleDTOResponse.setStartTime(invoice.getStartTime());
 //        double fee = 0;

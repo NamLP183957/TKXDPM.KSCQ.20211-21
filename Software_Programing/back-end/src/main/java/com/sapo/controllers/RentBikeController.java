@@ -42,9 +42,8 @@ public class RentBikeController {
     @PostMapping("/process-bike-code")
     public ResponseEntity<Object> processBikeCode(@RequestBody String bikeCode) {
         ParkingSlotDTO parkingSlotDTO = parkingSlotService.processBikeCode(bikeCode);
-        System.out.println("bikeCode is " + bikeCode);
+
         if (parkingSlotDTO.getId() == 0) {
-            System.out.println("Error code");
             return ResponseEntity.badRequest().body("Invalid bike code!");
         } else {
             VehicleDTOResponse vehicleDTO = vehicleService.findNotRentVehicleByParkingSlot(parkingSlotDTO.getId());
@@ -60,87 +59,18 @@ public class RentBikeController {
     @PostMapping("/deposit/{vehicleId}")
     public ResponseEntity<Object> deposit(@RequestBody PaymentForm paymentForm, @PathVariable("vehicleId")Integer vehicleId) {
         try {
-            /*if (!validateDateString(paymentForm.getCvvCode())) {
-                return ResponseEntity.badRequest().body("Invalid cvv code");
-            }
-            if (!validateDateString(paymentForm.getDateExpired())) {
-                return ResponseEntity.badRequest().body("Invalid date expired");
-            }*/
-            InterbankInterface interbank = new InterbankSubsystem();
             Card card = paymentForm.getCard();
             boolean isRentDay = paymentForm.isRentDay();
 
-//            card.setCardCode(paymentForm.getCardCode());
-//            card.setCvvCode(paymentForm.getCvvCode());
-//            card.setOwner(paymentForm.getOwner());
-//            card.setDateExpired(Long.parseLong(paymentForm.getDateExpired()));
-            System.out.println("dateExpired: " + card.getDateExpired());
+            InterbankInterface interbank = new InterbankSubsystem();
             PaymentTransactionDTO paymentTransaction = interbank.pay(card, paymentForm.getAmount(), "Deposit");
 
             saveTransaction(paymentTransaction, vehicleId);
             updateVehicleAndParkingSlot(vehicleId, isRentDay);
             return ResponseEntity.ok(paymentTransaction);
         } catch (PaymentException | UnrecognizedException ex) {
-            return ResponseEntity.badRequest().body("Cann't payment");
+            return ResponseEntity.badRequest().body("Can't payment");
         }
-    }
-
-    /**
-     * Kiểm tra xem mã bảo mật có hợp lệ hay không
-     * @param cvvCode   - Mã bảo mật cần kiểm tra
-     * @return  true nếu mã bảo mật là một chuỗi gồm 3 chữ số, ngược lại là false.
-     */
-    public boolean validateSecurityCode(String cvvCode) {
-        if (cvvCode.length() != 3) return false;
-        try {
-            Integer.parseInt(cvvCode);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Kiểm tra xem chuỗi nhập vào có phải ngày hợp lệ hay không.
-     * @param dateStr   - Chuỗi nhập vào
-     * @return     true nếu chuỗi nhập vào gồm 4 chữ số, 2 chữ só đầu biểu diễn cho tháng, 2 chữ số sau biểu diễn cho ngày.
-     */
-    public boolean validateDateString(String dateStr) {
-        if (dateStr.length() != 4) return false;
-        try {
-            Long.parseLong(dateStr);
-            String monthStr = dateStr.substring(0, 2);
-            int month = Integer.parseInt(monthStr);
-            if (month > 12 || month < 1) return false;
-
-            String dayStr = dateStr.substring(2, 4);
-            int day = Integer.parseInt(dayStr);
-            switch (month) {
-                case 2:
-                    if (day >= 30 || day <= 0) return false;
-                    break;
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                case 12:
-                    if (day > 31 || day <= 0) return false;
-                    break;
-                case 4:
-                case 6:
-                case 9:
-                case 11:
-                    if (day > 30 || day <= 0) return false;
-                    break;
-                default:
-                    break;
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
     }
 
     /**
