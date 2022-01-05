@@ -73,8 +73,8 @@ function Vehicle(props) {
             <Card.Title>Vị trí: {vehicle.parkingSlotId}</Card.Title>
             <div>Biển số: {vehicle.licensePlate}</div>
             <div>Loại xe: {BIKE_TYPE[vehicle.type]}</div>
-            {vehicle.type === 2 || vehicle.type === 4 ? <div>Thời lượng pin (dành cho xe điện): {vehicle.battery} %</div> : null}
-            {vehicle.type === 2 || vehicle.type === 4 ? <div>Thời gian sử dụng tối đa (dành cho xe điện): {vehicle.maxTime} phút</div> : null}
+            {vehicle.type === 2 || vehicle.type === 4 ? <div>Thời lượng pin: {vehicle.battery} %</div> : null}
+            {vehicle.type === 2 || vehicle.type === 4 ? <div>Thời gian sử dụng tối đa: {vehicle.maxTime} phút</div> : null}
             <br />
             <Button variant="danger" onClick={() => handleOnClick()}>
               Thuê xe
