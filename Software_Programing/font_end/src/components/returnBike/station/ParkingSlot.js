@@ -7,6 +7,7 @@ import PopupTitle from '../../popup/PopupTitle';
 import { useHistory } from 'react-router-dom';
 import {BIKE_TYPE} from '../../../variables/ConstantCommon'
 import {getParkingSLot, processTransaction} from '../../../services/ReturnBikeService'
+
 function ParkingSlot(props) {
     const history = useHistory();
     const {stationId, type, vehicle} = props;
@@ -64,22 +65,7 @@ function ParkingSlot(props) {
     }
 
     let typeBike = BIKE_TYPE[type];
-    // switch(type){
-    //     case 1:
-    //         typeBike = "Xe đạp";
-    //         break;
-    //     case 2:
-    //         typeBike = "Xe đạp đơn điện";
-    //         break;
-    //     case 3:
-    //         typeBike = "Xe đạp đôi";
-    //         break;
-    //     case 4:
-    //         typeBike = "Xe đạp đôi điện";
-    //         break;
-    //     default:
-    //         break;
-    // }
+
     return (
         <div>
             <PopupDialog handleOnClose={props.handleOnClose}>
@@ -89,9 +75,9 @@ function ParkingSlot(props) {
                 <PopupBody>
                     <table className='w-100'>
                         <tbody>
-                        <tr>
-                            <td><span>{typeBike}</span></td>
-                            <td>
+                        <tr className='row'>
+                            <td className='col-4'><span>{typeBike}</span></td>
+                            <td className='col-4'>
                                 {slots.length > 0 
                                 ? <select className="form-select" value={parkingSlot} onChange={(e) => onChangeSlot(e)}>
                                     <option value={parkingSlot} selected hidden>{parkingSlot}</option>
@@ -100,10 +86,10 @@ function ParkingSlot(props) {
                                         return(<option key={index} value={id}>{id}</option>)
                                     })}
                                 </select> 
-                                : <span className='text-danger'>Not Avaible Parking Slot !</span>
+                                : <span className='text-danger fs-5'>Không có ô trống hợp lệ !</span>
                                 }
                             </td>
-                            <td>
+                            <td className='col-4'>
                                 {parkingSlot!="" 
                                 ?<button className='btn btn-primary' onClick={() => handleReturnBike()} >Trả xe</button>
                                 :<button className='btn btn-primary' disabled>Trả xe</button>}

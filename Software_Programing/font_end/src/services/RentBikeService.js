@@ -1,9 +1,9 @@
 import axios from "axios"
 import {SERVER_PORT} from '../variables/Server'
-const RENTBIKE_API_URL = `http://localhost:${SERVER_PORT}/api/rentbike`
+const RENTBIKE_API_URL = `http://localhost:${SERVER_PORT}/api/rentbike/`
 
 const postBikeCode = (bikeCode) => {
-    return axios.post(RENTBIKE_API_URL + "/process-bike-code", bikeCode, {
+    return axios.post(`${RENTBIKE_API_URL}/process-bike-code`, bikeCode, {
         headers: {"Content-Type": "application/json"}
     });
 }

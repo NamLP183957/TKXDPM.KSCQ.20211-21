@@ -45,7 +45,7 @@ function TransactionForm(props) {
         
         (async (paymentFormJSON, id) => {
             try {
-            const resp = await axios.post("http://localhost:8080/api/rentbike/deposit/" + id, paymentFormJSON, {
+            const resp = await axios.post("http://localhost:8081/api/rentbike/deposit/" + id, paymentFormJSON, {
                 headers: {"Content-Type": "application/json"}
             });
             if (resp.status === 200) {

@@ -30,7 +30,7 @@ function StationScreen(props) {
 
     return (
         <div>
-            <h2>List Station</h2>
+            <h2 className='mb-3'>List Station</h2>
             {/* <SearchForm /> */}
             <ListStation handleOnClick={handleOnClick}/>
             {toggle && <ParkingSlot type={type} stationId={stationId} vehicle={vehicle} handleOnClose={() => togglePopup()}/>}

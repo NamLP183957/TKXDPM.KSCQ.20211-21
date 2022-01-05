@@ -21,7 +21,7 @@ function ListStation(props) {
     }
 
     return (
-        <div className='w-100 d-flex flex-column align-items-center text-start overflow-auto'>
+        <div className='w-100 d-flex flex-column align-items-start text-start overflow-auto'>
             {stations.map((station, index) => {
                 var {address, area, name} = station;
                 return( 

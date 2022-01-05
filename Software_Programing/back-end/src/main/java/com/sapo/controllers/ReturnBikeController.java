@@ -54,7 +54,7 @@ public class ReturnBikeController {
 
     /**
      * thanh toan tien thue xe
-     * @param paymentFormReturnBike thong tin thanh toan gom card, tien thue, thog tin ve xe
+     * @param paymentFormReturnBike thong tin thanh toan gom card, tien thue, thong tin ve xe
      * @return paymentTransaction: thong tin giao dich
      */
     @PostMapping("/process-transaction")
@@ -118,32 +118,6 @@ public class ReturnBikeController {
     private void updateInvoice(Integer invoiceId) {
         invoiceService.updateInvoiceStatus(invoiceId, ConstantVariableCommon.DONE_INVOICE);
     }
-
-    /**
-     * Tinh toan so tien thue xe
-     * @param timeStart: thoi gian bat dau thue
-     * @param timeEnd: thoi gian ket thuc thue
-     * @param maxTime: thoi gian thue xe toi da ban dau
-     * @return chi phi thue xe da tinh toan
-     * @throws ParseException
-     */
-      public static Long calculateFeeRentBike(String timeStart, String timeEnd, long maxTime) throws ParseException {
-          DateFormat df = new SimpleDateFormat("dd/mm/yyyy HH:mm:ss");
-          Date dateStart = df.parse(timeStart);
-          Date dateEnd = df.parse(timeEnd);
-          // tien thue xe
-          Long rentFee = null;
-          Long timeRentMillis = dateEnd.getTime() - dateStart.getTime();
-          Long timeRentMinutes = TimeUnit.MILLISECONDS.toMinutes(timeRentMillis);
-          Long timeRentHours = TimeUnit.MILLISECONDS.toHours(timeRentMillis);
-          if(timeRentHours < 12){
-              rentFee = RENT_FEE_A_PART_DAY - (12 - timeRentHours)*10000;
-              return rentFee;
-          }
-          Long timeOver = maxTime - timeRentMinutes;
-          rentFee = Math.round((double) timeRentHours / 12)*RENT_FEE_A_PART_DAY + Math.round(timeOver / 15)*2000;
-          return rentFee;
-      }
 
     /**
      * lay ra cho de xe con trong theo loai xe
