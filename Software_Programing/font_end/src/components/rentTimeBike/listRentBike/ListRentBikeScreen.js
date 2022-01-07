@@ -16,7 +16,7 @@ function ListRentBikeScreen() {
                 console.log(resp);
                 setListBike(resp.data);
             } catch (error) {
-                setError("Không thể tải dữ liệu")
+                setError("")
             }})();
 
         setInterval(
