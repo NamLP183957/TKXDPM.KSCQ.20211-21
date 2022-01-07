@@ -27,7 +27,7 @@ public class Invoice extends BaseEntity{
     private long restartTime;
 
     @Column(name = "total_rent_time")
-    private int totalRentTime;
+    private long totalRentTime;
 
     @Column(name = "status")
     private int status;

@@ -76,7 +76,14 @@ public class VehicleServiceImpl implements VehicleService {
 //        vehicleDTOResponse.setMaxTime(vehicle.getMaxTime());
 //        vehicleDTOResponse.setStatus(vehicle.getStatus());
         Invoice invoice = invoiceRepository.findInvoiceByVehicleIdAndStatus(vehicle.getId(), 1);
-        long totalRentTime = new Date().getTime() - invoice.getRestartTime() + invoice.getTotalRentTime();
+        long totalRentTime = 0;
+        if (invoice.getRestartTime() != invoice.getStartTime()) {
+            totalRentTime = new Date().getTime() - invoice.getRestartTime() + invoice.getTotalRentTime();
+        } else {
+            totalRentTime = new Date().getTime() - invoice.getStartTime();
+        }
+        invoice.setTotalRentTime(totalRentTime);
+        invoiceRepository.save(invoice);
         vehicleDTOResponse.setTimeRented(totalRentTime);
         vehicleDTOResponse.setStartTime(invoice.getStartTime());
 //        double fee = 0;

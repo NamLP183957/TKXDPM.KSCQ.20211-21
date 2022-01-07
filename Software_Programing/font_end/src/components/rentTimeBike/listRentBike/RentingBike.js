@@ -23,13 +23,14 @@ function RentingBike(props) {
 
   const toLocaleDateString = (timestamp) => {
     const date = new Date(timestamp);
+    const day = Number(date.getDate()) > 9 ? date.getDate() : `0${date.getDate()}`;
     const hour =
       Number(date.getHours()) > 9 ? date.getHours() : `0${date.getHours()}`;
     const min =
       Number(date.getMinutes()) > 9
         ? date.getMinutes()
         : `0${date.getMinutes()}`;
-    return `${hour}h ${min}p`;
+    return `${day*24 + hour}h ${min}p`;
   };
 
   const toLocaleDateStringV2= timestamp => {
